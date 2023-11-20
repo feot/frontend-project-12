@@ -1,5 +1,10 @@
 import React from 'react';
+import Header from '../../components/Header.jsx';
 
-const Main = () => <h1>Chat</h1>;
+const Main = () => (
+  <div className="d-flex flex-column h-100">
+    <Header />
+  </div>
+)
 
 export default Main;
