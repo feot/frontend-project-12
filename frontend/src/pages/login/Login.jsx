@@ -2,99 +2,118 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
+import { useLoginMutation } from '../../services/login.js';
+import { Navigate, useLocation } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as yup from 'yup'
 
-import Header from '../../components/Header.jsx';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 
 const schema = yup.object().shape({
-  username: yup.string().required('Required'),
+  username: yup.string().trim().required('Required'),
   password: yup.string().required('Required'),
 });
 
 const Login = () => {
+  const location = useLocation();
+
+  const [
+    login,
+    { error: loginError, isLoading: isLoggingIn, isSuccess },
+  ] = useLoginMutation();
+  const loginHandler = (credentials) => login(credentials);
+
   const loginRef = useRef();
   const passRef = useRef();
 
   useEffect(() => {
     loginRef.current.focus();
-  }, [])
+  }, []);
+
+  const authFailed = !!loginError;
+  const authErrorMessage = (loginError?.data?.error === 'Unauthorized')
+    ? 'Неверные имя пользователя или пароль'
+    : 'Что-то пошло не так, попробуйте снова';
+
+  if (isSuccess) {
+    const { from } = location.state;
+    return <Navigate to={from}/>;
+  }
 
   return (
     <>
-      <Header />
-      <div className="container h-100 py-3">
-        <div className="d-flex h-100">
-          <div className="col-12 col-sm-8 col-lg-4  m-auto">
-            <div className="p-3 card shadow-sm">
-              <Formik
-                initialValues={{ username: '', password: '' }}
-                validationSchema={schema}
-                validateOnChange="false"
-                onSubmit={(values) => {
-                  console.log('Submitting the form with data:', values);
-                }}
-              >
-                {({
-                  values,
-                  isValid,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                }) => (
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="username">
-                      <FloatingLabel
-                        label="username"
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          name="username"
-                          autoComplete="username"
-                          required
-                          placeholder="username"
-                          id="username"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.username}
-                          ref={loginRef}
-                          className={touched.username && !isValid && 'is-invalid'}
-                        />
-                      </FloatingLabel>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="password">
-                      <FloatingLabel
-                        label={"password"}
-                        className="mb-3"
-                      >
-                        <Form.Control
-                          type="password"
-                          autoComplete="password"
-                          required
-                          placeholder={"password"}
-                          id="password"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.password}
-                          ref={passRef}
-                          className={touched.password && !isValid && 'is-invalid'}
-                        />
-                      </FloatingLabel>
-                    </Form.Group>
-                    <div className="d-grid gap-2">
-                      <Button variant="outline-primary" type="submit">
-                        Войти
-                      </Button>
-                    </div>
-                  </Form>
-                )}
-              </Formik>
-            </div>
-          </div>
+      <div className="col-12 col-sm-8 col-lg-4  m-auto py-3">
+        <div className="p-3 card shadow-sm">
+          <Formik
+            initialValues={{ username: '', password: '' }}
+            validationSchema={schema}
+            onSubmit={(values) => {
+              loginHandler(values);
+            }}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+            }) => (
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="username">
+                  <FloatingLabel
+                    label="username"
+                    className="mb-3"
+                  >
+                    <Form.Control
+                      name="username"
+                      autoComplete="username"
+                      required
+                      placeholder="username"
+                      id="username"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.username}
+                      ref={loginRef}
+                      isInvalid={(touched.username && errors.username) || authFailed}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="password">
+                  <FloatingLabel
+                    label={"password"}
+                    className="mb-3"
+                  >
+                    <Form.Control
+                      type="password"
+                      autoComplete="password"
+                      required
+                      placeholder={"password"}
+                      id="password"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.password}
+                      ref={passRef}
+                      isInvalid={(touched.password && errors.password) || authFailed}
+                    />
+                    <Form.Control.Feedback
+                      type="invalid"
+                      className="text-center"
+                    >
+                      {authErrorMessage}
+                    </Form.Control.Feedback>
+                  </FloatingLabel>
+                </Form.Group>
+                <div className="d-grid gap-2">
+                  <Button variant="outline-primary" type="submit" disabled={isLoggingIn}>
+                    Войти
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </>
