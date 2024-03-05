@@ -22,13 +22,20 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addMatcher(api.endpoints.login.matchPending, (_, action) => {
+        console.log('pending', action);
+      })
       .addMatcher(api.endpoints.login.matchFulfilled, (state, action) => {
+        console.log('fulfilled', action);
         const { username: user, token } = action.payload;
         const isAuthenticated = true;
         state.user = user;
         state.token = token;
         state.isAuthenticated = isAuthenticated;
         localStorage.setItem('auth', JSON.stringify({ user, token, isAuthenticated }));
+      })
+      .addMatcher(api.endpoints.login.matchRejected, (_, action) => {
+        console.log('rejected', action);
       });
   },
 });

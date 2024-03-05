@@ -16,6 +16,15 @@ const schema = yup.object().shape({
   password: yup.string().required('Required'),
 });
 
+const getErrorMsg = (loginError) => {
+  if (loginError) {
+    return (loginError.data.error === 'Unauthorized')
+      ? 'Неверные имя пользователя или пароль'
+      : 'Что-то пошло не так, попробуйте снова';
+  }
+  return null;
+};
+
 const Login = () => {
   const location = useLocation();
 
@@ -33,9 +42,8 @@ const Login = () => {
   }, []);
 
   const authFailed = !!loginError;
-  const authErrorMessage = (loginError?.data?.error === 'Unauthorized')
-    ? 'Неверные имя пользователя или пароль'
-    : 'Что-то пошло не так, попробуйте снова';
+  console.log('loginError', loginError);
+  const authErrorMessage = getErrorMsg(loginError);
 
   if (isSuccess) {
     const { from } = location.state;
@@ -98,12 +106,7 @@ const Login = () => {
                       ref={passRef}
                       isInvalid={(touched.password && errors.password) || authFailed}
                     />
-                    <Form.Control.Feedback
-                      type="invalid"
-                      className="text-center"
-                    >
-                      {authErrorMessage}
-                    </Form.Control.Feedback>
+                    {authErrorMessage && <div className="text-center invalid-feedback">{authErrorMessage}</div>}
                   </FloatingLabel>
                 </Form.Group>
                 <div className="d-grid gap-2">
