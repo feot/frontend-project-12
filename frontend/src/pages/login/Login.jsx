@@ -42,7 +42,6 @@ const Login = () => {
   }, []);
 
   const authFailed = !!loginError;
-  console.log('loginError', loginError);
   const authErrorMessage = getErrorMsg(loginError);
 
   if (isSuccess) {
