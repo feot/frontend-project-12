@@ -45,7 +45,7 @@ const Login = () => {
   const authErrorMessage = getErrorMsg(loginError);
 
   if (isSuccess) {
-    const { from } = location.state;
+    const from = location?.state?.from || '/';
     return <Navigate to={from}/>;
   }
 

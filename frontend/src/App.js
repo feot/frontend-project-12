@@ -47,7 +47,10 @@ function App() {
         <main className="h-100 d-flex align-items-center">
           <div className="container">
             <Routes>
-              <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/login"
+                element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+              />
               <Route
                 path="/"
                 element={(
