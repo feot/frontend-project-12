@@ -11,9 +11,7 @@ const slice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addMatcher(api.endpoints.getInitialData.matchFulfilled, (state, { payload }) => {
-        console.log('messages, matchFulfilled', payload);
-        const { messages } = payload;
+      .addMatcher(api.endpoints.getMessages.matchFulfilled, (state, { payload: messages }) => {
         messages.forEach(message => {
           state.entities[message.id] = message;
         });

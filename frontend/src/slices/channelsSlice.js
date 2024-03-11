@@ -9,19 +9,23 @@ const initialState = {
 const slice = createSlice({
   name: 'channels',
   initialState,
+  reducers: {
+    addChannels: (state, { payload: channels }) => {
+      channels.forEach(channel => {
+        state.entities[channel.id] = channel;
+      });
+      state.ids.push(channels.map(({ id }) => id));
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addMatcher(api.endpoints.getInitialData.matchFulfilled, (state, { payload }) => {
-        console.log('channels, matchFulfilled', payload);
-        const { channels } = payload;
-        channels.forEach(channel => {
-          state.entities[channel.id] = channel;
-        });
-        state.ids.push(channels.map(({ id }) => id));
+      .addMatcher(api.endpoints.getChannels.matchFulfilled, (state, action) => {
+        slice.caseReducers.addChannels(state, action);
       });
   },
 });
 
 export default slice.reducer;
+export const { addChannels } = slice.actions;
 
 export const selectChannels = (state) => state.channels.entities;

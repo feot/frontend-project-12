@@ -28,15 +28,15 @@ const PrivateRoute = ({ isAuthenticated, children }) => {
   );
 };
 
-function App() {
+const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   return (
     <BrowserRouter>
       <div className="d-flex flex-column h-100">
-        <header>
-          <Navbar bg="light" expand="lg" className="shadow-sm">
+        <header className="shadow-sm">
+          <Navbar bg="white" expand="lg">
             <Container>
               <Navbar.Brand as={Link} to="/">Chat</Navbar.Brand>
               {isAuthenticated && <Button onClick={() => dispatch(logout())}>Выйти</Button>}
@@ -44,24 +44,22 @@ function App() {
           </Navbar>
         </header>
 
-        <main className="h-100 d-flex align-items-center">
-          <div className="container">
-            <Routes>
-              <Route
-                path="/login"
-                element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
-              />
-              <Route
-                path="/"
-                element={(
-                  <PrivateRoute isAuthenticated={isAuthenticated}>
-                    <MainPage />
-                  </PrivateRoute>
-                )}
-              />
-              <Route path='*' element={<NotFoundPage />} />
-            </Routes>
-          </div>
+        <main className="d-flex align-items-center h-100 py-3 overflow-hidden">
+          <Routes>
+            <Route
+              path="/login"
+              element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+            />
+            <Route
+              path="/"
+              element={(
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <MainPage />
+                </PrivateRoute>
+              )}
+            />
+            <Route path='*' element={<NotFoundPage />} />
+          </Routes>
         </main>
       </div>
     </BrowserRouter>

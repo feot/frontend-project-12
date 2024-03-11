@@ -50,7 +50,7 @@ const Login = () => {
   }
 
   return (
-    <>
+    <div className="container">
       <div className="col-12 col-sm-8 col-lg-4  m-auto py-3">
         <div className="p-3 card shadow-sm">
           <Formik
@@ -118,7 +118,7 @@ const Login = () => {
           </Formik>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

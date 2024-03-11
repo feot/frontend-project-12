@@ -1,21 +1,36 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useGetInitialDataQuery } from '../../services/initialData.js';
-import { selectChannels } from '../../slices/channelsSlice.js';
-import { selectMessages } from '../../slices/messagesSlice.js';
+import Channels from '../../components/Channels.jsx';
+import ChatHeader from '../../components/ChatHeader.jsx';
+import Messages from '../../components/Messages.jsx';
+import ChatForm from '../../components/ChatForm.jsx';
 
 const Main = () => {
-  useGetInitialDataQuery();
-
-  const channelsEntities = useSelector(selectChannels);
-  console.log('channelsEntities', channelsEntities);
-  const messagesEntities = useSelector(selectMessages);
-  console.log('messagesEntities', messagesEntities);
-
   return (
-    <>
-      <p>Hi!</p>
-    </>
+    <div className="container h-100 rounded shadow">
+      <div className="row flex-md-row h-100">
+        <div className="col-4 col-md-2 d-flex flex-column border-end p-3 h-100">
+          <div className="mb-3">
+            <b>Каналы</b>
+          </div>
+          <div className="overflow-auto h-100">
+            <Channels />
+          </div>
+        </div>
+        <div className="col px-0 h-100">
+          <div className="d-flex flex-column h-100">
+            <header className="shadow-sm p-3">
+              <ChatHeader />
+            </header>
+            <main className="p-3 overflow-auto">
+              <Messages />
+            </main>
+            <div className="mt-auto">
+              <ChatForm />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
