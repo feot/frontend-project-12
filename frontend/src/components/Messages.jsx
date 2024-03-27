@@ -1,3 +1,4 @@
+import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useGetMessagesQuery } from '../services/messages.js';
 import { selectActiveChannel } from '../slices/uiSlice.js';
@@ -10,19 +11,26 @@ const Messages = () => {
   const messages = Object.values(messageEntities)
     .filter(({ channelId }) => channelId === activeChannel?.id);
 
+  const messagesContainerRef = useRef();
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo(0, messagesContainerRef.current.scrollHeight);
+    }
+  }, [messages]);
+
   if (isError || !messages.length) {
     return null;
   }
 
   return (
-    <>
+    <div ref={messagesContainerRef} className="h-100 overflow-auto text-break">
       {
         messages.map((message) => {
           const { id, username, body } = message;
           return <div key={id}><b>{username}</b>: {body}</div>
         })
       }
-    </>
+    </div>
   );
 };
 

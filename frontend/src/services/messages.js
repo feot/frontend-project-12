@@ -5,7 +5,14 @@ export const messagesApi = api.injectEndpoints({
     getMessages: build.query({
       query: () => ({ url: 'messages' }),
     }),
+    sendMessage: build.mutation({
+      query: (message) => ({
+        url: 'messages',
+        method: 'POST',
+        body: message,
+      }),
+    }),
   }),
 });
 
-export const { useGetMessagesQuery } = messagesApi;
+export const { useGetMessagesQuery, useSendMessageMutation } = messagesApi;

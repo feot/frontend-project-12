@@ -9,6 +9,13 @@ const initialState = {
 const slice = createSlice({
   name: 'messages',
   initialState,
+  reducers: {
+    addMessage: (state, { payload: message }) => {
+      const { id } = message;
+      state.entities[id] = message;
+      state.ids.push(id);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addMatcher(api.endpoints.getMessages.matchFulfilled, (state, { payload: messages }) => {
@@ -21,5 +28,6 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
+export const { addMessage } = slice.actions;
 
 export const selectMessages = (state) => state.messages.entities;
