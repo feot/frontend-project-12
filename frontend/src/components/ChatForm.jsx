@@ -3,10 +3,9 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { io } from 'socket.io-client';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -14,22 +13,18 @@ import Button from 'react-bootstrap/Button';
 import { useSendMessageMutation } from '../services/messages.js';
 import { selectActiveChannel } from '../slices/uiSlice.js';
 import { selectUsername } from '../slices/authSlice.js';
-import { addMessage } from '../slices/messagesSlice.js';
 
 const schema = yup.object().shape({
   text: yup.string().trim().required('Required'),
 });
 
-const socket = io();
-
 const ChatForm = () => {
-  const dispatch = useDispatch();
   const activeChannel = useSelector(selectActiveChannel);
   const username = useSelector(selectUsername);
   const [text, setText] = useState('');
   const [
     sendMessage,
-    { error: sendMessageError, isLoading: isSendingMessage }
+    { error: sendMessageError, isLoading: isSendingMessage, isSuccess }
   ] = useSendMessageMutation();
 
   const handleChange = (e) => {
@@ -57,11 +52,12 @@ const ChatForm = () => {
   useEffect(() => {
     textInputRef.current.focus();
   }, []);
-
-  socket.on('newMessage', (message) => {
-    dispatch(addMessage(message));
-    setText('');
-  });
+  
+  useEffect(() => {
+    if (isSuccess) {
+      setText('');
+    }
+  }, [isSuccess]);
 
   return (
     <Formik
