@@ -1,8 +1,3 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-} from 'react';
 import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -18,23 +13,30 @@ const schema = yup.object().shape({
   text: yup.string().trim().required('Required'),
 });
 
+const InvalidFeedback = ({ validationError, networkError }) => {
+  if (!validationError && !networkError) {
+    return null;
+  }
+
+  const errorMsg = (() => {
+    if (validationError === 'required') {
+      return 'Поле не может быть пустым';
+    }
+    return 'Что-то пошло не так, попробуйте снова';
+  })();
+
+  return <div className="w-100 invalid-feedback text-center">{errorMsg}</div>;
+};
+
 const ChatForm = () => {
   const activeChannel = useSelector(selectActiveChannel);
   const username = useSelector(selectUsername);
-  const [text, setText] = useState('');
   const [
     sendMessage,
-    { error: sendMessageError, isLoading: isSendingMessage, isSuccess }
+    { error: sendMessageError, isLoading: isSendingMessage }
   ] = useSendMessageMutation();
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setText(value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSendMessage = (text) => {
     const channelId = activeChannel?.id;
 
     if (channelId) {
@@ -47,24 +49,22 @@ const ChatForm = () => {
     }
   };
 
-  const textInputRef = useRef();
-
-  useEffect(() => {
-    textInputRef.current.focus();
-  }, []);
-  
-  useEffect(() => {
-    if (isSuccess) {
-      setText('');
-    }
-  }, [isSuccess]);
-
   return (
     <Formik
-      initialValues={{ text }}
+      initialValues={{ text: '' }}
       validationSchema={schema}
+      validateOnChange={false}
+      onSubmit={({ text }, { resetForm }) => {
+        handleSendMessage(text);
+        resetForm();
+      }}
     >
-      {() => (
+      {({
+        values,
+        errors,
+        handleChange,
+        handleSubmit,
+      }) => (
         <Form onSubmit={handleSubmit} className="d-flex flex-wrap gap-1 p-3 pt-0">
           <Form.Control
             name="text"
@@ -72,15 +72,18 @@ const ChatForm = () => {
             placeholder="Введите сообщение"
             id="text"
             className="w-auto flex-grow-1"
-            value={text}
+            value={values.text}
             onChange={handleChange}
-            ref={textInputRef}
-            isInvalid={!isSendingMessage && sendMessageError}
+            autoFocus
+            isInvalid={!isSendingMessage && (errors.text || sendMessageError)}
           />
           <Button variant="outline-primary" type="submit" disabled={isSendingMessage}>
             Отправить
           </Button>
-          {sendMessageError && <div className="w-100 invalid-feedback text-center">Что-то пошло не так, попробуйте снова</div>}
+          <InvalidFeedback
+            validationError={errors?.text}
+            networkError={sendMessageError}
+          />
         </Form>
       )}
     </Formik>
