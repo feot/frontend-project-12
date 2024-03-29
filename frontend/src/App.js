@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsAuthenticated, logout } from './slices/authSlice.js';
 import {
@@ -15,6 +16,8 @@ import {
   Navbar,
   Button,
 } from 'react-bootstrap';
+
+import ModalContext from './ModalContext.js';
 
 import MainPage from './pages/main/Main.jsx';
 import LoginPage from './pages/login/Login.jsx';
@@ -32,37 +35,42 @@ const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  return (
-    <BrowserRouter>
-      <div className="d-flex flex-column h-100">
-        <header className="shadow-sm">
-          <Navbar bg="white" expand="lg">
-            <Container>
-              <Navbar.Brand as={Link} to="/">Chat</Navbar.Brand>
-              {isAuthenticated && <Button onClick={() => dispatch(logout())}>Выйти</Button>}
-            </Container>
-          </Navbar>
-        </header>
+  const [Modal, setModal] = useState(null);
 
-        <main className="d-flex align-items-center h-100 py-3 overflow-hidden">
-          <Routes>
-            <Route
-              path="/login"
-              element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
-            />
-            <Route
-              path="/"
-              element={(
-                <PrivateRoute isAuthenticated={isAuthenticated}>
-                  <MainPage />
-                </PrivateRoute>
-              )}
-            />
-            <Route path='*' element={<NotFoundPage />} />
-          </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
+  return (
+    <ModalContext.Provider value={setModal}>
+      <BrowserRouter>
+        <div className="d-flex flex-column h-100">
+          <header className="shadow-sm">
+            <Navbar bg="white" expand="lg">
+              <Container>
+                <Navbar.Brand as={Link} to="/">Chat</Navbar.Brand>
+                {isAuthenticated && <Button onClick={() => dispatch(logout())}>Выйти</Button>}
+              </Container>
+            </Navbar>
+          </header>
+
+          <main className="d-flex align-items-center h-100 py-3 overflow-hidden">
+            <Routes>
+              <Route
+                path="/login"
+                element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+              />
+              <Route
+                path="/"
+                element={(
+                  <PrivateRoute isAuthenticated={isAuthenticated}>
+                    <MainPage />
+                  </PrivateRoute>
+                )}
+              />
+              <Route path='*' element={<NotFoundPage />} />
+            </Routes>
+          </main>
+        </div>
+        {Modal}
+      </BrowserRouter>
+    </ModalContext.Provider>
   );
 }
 

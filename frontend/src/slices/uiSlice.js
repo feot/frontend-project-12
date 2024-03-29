@@ -3,6 +3,7 @@ import { api } from '../services/api.js';
 
 const initialState = {
   activeChannel: null,
+  isModalShown: false,
 };
 
 const slice = createSlice({
@@ -12,6 +13,9 @@ const slice = createSlice({
     selectChannel: (state, { payload: channel }) => {
       state.activeChannel = channel;
     },
+    setIsModalShown: (state, { payload }) => {
+      state.isModalShown = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -19,11 +23,16 @@ const slice = createSlice({
         if (Object.keys(payload).length !== 0) {
           state.activeChannel = Object.values(payload)[0];
         }
+      })
+      .addMatcher(api.endpoints.addChannel.matchFulfilled, (state, { payload }) => {
+        state.activeChannel = payload;
+        state.isModalShown = false;
       });
   },
 });
 
 export default slice.reducer;
-export const { selectChannel } = slice.actions;
+export const { selectChannel, setIsModalShown } = slice.actions;
 
 export const selectActiveChannel = (state) => state.ui.activeChannel;
+export const selectIsModalShown = (state) => state.ui.isModalShown;

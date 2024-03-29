@@ -9,12 +9,7 @@ const Main = () => {
     <div className="container h-100 rounded shadow">
       <div className="row flex-md-row h-100">
         <div className="col-4 col-md-2 d-flex flex-column border-end p-3 h-100">
-          <div className="mb-3">
-            <b>Каналы</b>
-          </div>
-          <div className="overflow-auto h-100">
-            <Channels />
-          </div>
+          <Channels />
         </div>
         <div className="col px-0 h-100">
           <div className="d-flex flex-column h-100">

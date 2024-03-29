@@ -5,7 +5,14 @@ export const channelsApi = api.injectEndpoints({
     getChannels: build.query({
       query: () => ({ url: 'channels' }),
     }),
+    addChannel: build.mutation({
+      query: (channel) => ({
+        url: 'channels',
+        method: 'POST',
+        body: channel,
+      }),
+    }),
   }),
 });
 
-export const { useGetChannelsQuery } = channelsApi;
+export const { useGetChannelsQuery, useAddChannelMutation } = channelsApi;
