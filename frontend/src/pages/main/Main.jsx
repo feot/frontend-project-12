@@ -3,7 +3,7 @@ import Channels from '../../components/Channels.jsx';
 import ChatHeader from '../../components/ChatHeader.jsx';
 import Messages from '../../components/Messages.jsx';
 import ChatForm from '../../components/ChatForm.jsx';
-import SocketListener from '../../socketListen.js';
+import SocketListener from '../../SocketListener.js';
 
 const Main = () => {
   return (

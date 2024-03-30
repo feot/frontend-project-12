@@ -20,7 +20,7 @@ const ChannelDeleteModal = ({ id }) => {
     removeChannel,
     {
       error: removingChannelError,
-      isLoading: isRemovingChannel
+      isLoading: isRemovingChannel,
     }
   ] = useRemoveChannelMutation();
 

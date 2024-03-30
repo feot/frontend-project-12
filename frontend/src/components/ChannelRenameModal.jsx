@@ -6,7 +6,7 @@ import * as yup from 'yup';
 
 import { selectChannels } from '../slices/channelsSlice.js';
 import { selectIsModalShown, setIsModalShown } from '../slices/uiSlice.js';
-import { useAddChannelMutation } from '../services/channels.js';
+import { useRenameChannelMutation } from '../services/channels.js';
 
 const getValidationSchema = (existingChannelNames) => {
   return yup.object().shape({
@@ -38,26 +38,26 @@ const InvalidFeedback = ({ validationError, networkError }) => {
   return <div className="invalid-feedback text-center w-100 mb-2">{errorMsg}</div>;
 };
 
-const ChannelAddModal = () => {
+const ChannelRenameModal = ({ id }) => {
   const channelEntities = useSelector(selectChannels);
   const isModalShown = useSelector(selectIsModalShown);
   const dispatch = useDispatch();
   const textInputRef = useRef();
   const existingChannelNames = Object.values(channelEntities).map(({ name }) => name);
   const [
-    addChannel,
+    renameChannel,
     {
-      error: addingChannelError,
-      isLoading: isAddingChannel,
+      error: renameChannelError,
+      isLoading: isRenamingChannel,
     }
-  ] = useAddChannelMutation();
+  ] = useRenameChannelMutation();
 
-  const handleAddChannel = (name) => {
-    addChannel({ name });
+  const handleRenameChannel = (id, name) => {
+    renameChannel({ id, name });
   };
 
   const handleClose = () => dispatch(setIsModalShown(false));
-
+  
   useEffect(() => {
     textInputRef.current.focus();
   }, [])
@@ -65,7 +65,7 @@ const ChannelAddModal = () => {
   return (
     <Modal show={isModalShown} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>Переименовать канал</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
@@ -73,7 +73,7 @@ const ChannelAddModal = () => {
           validationSchema={getValidationSchema(existingChannelNames)}
           validateOnChange={false}
           onSubmit={({ text }) => {
-            handleAddChannel(text);
+            handleRenameChannel(id, text);
           }}
         >
           {({
@@ -92,19 +92,19 @@ const ChannelAddModal = () => {
                 value={values.text}
                 onChange={handleChange}
                 ref={textInputRef}
-                isInvalid={!isAddingChannel && (errors.text || addingChannelError)}
+                isInvalid={!isRenamingChannel && (errors.text || renameChannelError)}
               />
               <InvalidFeedback
                 validationError={errors?.text}
-                networkError={addingChannelError}
+                networkError={renameChannelError}
               />
               <Button
                 variant="primary"
                 type="submit"
-                disabled={isAddingChannel}
+                disabled={isRenamingChannel}
                 className="ms-auto me-1"
               >
-                Добавить
+                Ок
               </Button>
               <Button variant="secondary" onClick={handleClose}>
                 Отмена
@@ -117,4 +117,4 @@ const ChannelAddModal = () => {
   );
 };
 
-export default ChannelAddModal;
+export default ChannelRenameModal;

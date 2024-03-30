@@ -2,7 +2,11 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 
-import { addChannel, removeChannel } from './slices/channelsSlice.js';
+import {
+  addChannel,
+  removeChannel,
+  renameChannel,
+} from './slices/channelsSlice.js';
 import { addMessage } from './slices/messagesSlice.js';
 
 const SocketListener = () => {
@@ -21,6 +25,10 @@ const SocketListener = () => {
 
     socket.on('newMessage', (message) => {
       dispatch(addMessage(message));
+    });
+
+    socket.on('renameChannel', (channel) => {
+      dispatch(renameChannel(channel));
     });
   }, [dispatch]);
 };

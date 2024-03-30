@@ -28,6 +28,9 @@ const slice = createSlice({
         state.ids.splice(index, 1);
       }
     },
+    renameChannel: (state, { payload: channel }) => {
+      state.entities[channel.id] = channel;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -38,6 +41,11 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-export const { addChannels, addChannel, removeChannel } = slice.actions;
+export const {
+  addChannels,
+  addChannel,
+  removeChannel,
+  renameChannel,
+} = slice.actions;
 
 export const selectChannels = (state) => state.channels.entities;

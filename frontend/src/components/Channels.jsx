@@ -5,6 +5,7 @@ import { Dropdown, Button } from 'react-bootstrap';
 import ModalContext from '../ModalContext.js';
 import ChannelAddModal from './ChannelAddModal.jsx';
 import ChannelDeleteModal from './ChannelDeleteModal.jsx';
+import ChannelRenameModal from './ChannelRenameModal.jsx';
 
 import { useGetChannelsQuery } from '../services/channels.js';
 import { selectActiveChannel } from '../slices/uiSlice.js';
@@ -36,6 +37,11 @@ const Channels = () => {
     dispatch(setIsModalShown(true));
   }
 
+  const handleChannelRename = (id) => {
+    setModal(<ChannelRenameModal id={id} />);
+    dispatch(setIsModalShown(true));
+  }
+
   const channelEls = Object.values(channelEntities).map((channel) => {
     const { id, name, removable } = channel;
     const channelName = `# ${name}`;
@@ -62,7 +68,7 @@ const Channels = () => {
 
           <Dropdown.Menu>
             <Dropdown.Item onClick={() => handleChannelDelete(id)}>Удалить</Dropdown.Item>
-            <Dropdown.Item>Переименовать</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleChannelRename(id)}>Переименовать</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>}
       </li>
