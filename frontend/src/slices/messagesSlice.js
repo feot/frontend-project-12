@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { api } from "../services/api";
+import { createSlice } from '@reduxjs/toolkit';
+import { api } from '../services/api.js';
+import { removeChannel } from './channelsSlice.js';
 
 const initialState = {
   entities: {},
@@ -18,11 +19,22 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(removeChannel, (state, { payload: channelId }) => {
+        const rest = Object.values(state.entities).reduce((acc, message) => {
+          if (message.channelId === channelId) {
+            delete state.entities[message.id];
+            return acc;
+          } else {
+            return [...acc, message.id];
+          }
+        }, []);
+        state.ids = rest;
+      })
       .addMatcher(api.endpoints.getMessages.matchFulfilled, (state, { payload: messages }) => {
         messages.forEach(message => {
           state.entities[message.id] = message;
         });
-        state.ids.push(messages.map(({ id }) => id));
+        state.ids.push(...messages.map(({ id }) => id));
       });
   },
 });

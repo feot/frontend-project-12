@@ -1,18 +1,15 @@
-import React, {
-  useContext,
-} from 'react';
+import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
+import { Dropdown, Button } from 'react-bootstrap';
 
 import ModalContext from '../ModalContext.js';
-import ChannelNameModal from './ChannelNameModal.jsx';
+import ChannelAddModal from './ChannelAddModal.jsx';
+import ChannelDeleteModal from './ChannelDeleteModal.jsx';
 
 import { useGetChannelsQuery } from '../services/channels.js';
 import { selectActiveChannel } from '../slices/uiSlice.js';
-import { selectChannels, addChannel } from '../slices/channelsSlice.js';
+import { selectChannels } from '../slices/channelsSlice.js';
 import { selectChannel, setIsModalShown } from '../slices/uiSlice.js';
-
-const socket = io();
 
 const Channels = () => {
   const dispatch = useDispatch();
@@ -21,16 +18,12 @@ const Channels = () => {
   const activeChannel = useSelector(selectActiveChannel);
   const channelEntities = useSelector(selectChannels);
 
-  socket.on('newChannel', (channel) => {
-    dispatch(addChannel(channel));
-  });
-
   if (isError || !Object.keys(channelEntities).length) {
     return null;
   }
 
   const handleChannelAdd = () => {
-    setModal(<ChannelNameModal />);
+    setModal(<ChannelAddModal />);
     dispatch(setIsModalShown(true));
   };
 
@@ -38,17 +31,40 @@ const Channels = () => {
     dispatch(selectChannel(channelEntities[id]));
   };
 
+  const handleChannelDelete = (id) => {
+    setModal(<ChannelDeleteModal id={id} />);
+    dispatch(setIsModalShown(true));
+  }
+
   const channelEls = Object.values(channelEntities).map((channel) => {
-    const { id, name } = channel;
+    const { id, name, removable } = channel;
     const channelName = `# ${name}`;
     const isActive = id === activeChannel?.id;
-    const className = (isActive)
-      ? 'w-100 rounded-0 text-start btn btn-secondary'
-      : 'w-100 rounded-0 text-start btn';
+    const channelBtnVariant = (isActive) ? 'secondary' : 'none';
 
     return (
-      <li key={id} className="nav-item w-100">
-        <button onClick={() => handleChannelSelect(id)} className={className}>{channelName}</button>
+      <li key={id} className="nav-item d-flex w-100">
+        <Button
+          variant={channelBtnVariant}
+          className="w-100 rounded-0 text-start"
+          onClick={() => handleChannelSelect(id)}
+        >
+          {channelName}
+        </Button>
+
+        {removable && <Dropdown>
+          <Dropdown.Toggle
+            variant={channelBtnVariant}
+            id="channel_dropdown"
+            className="rounded-0 px-1"
+          >
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => handleChannelDelete(id)}>Удалить</Dropdown.Item>
+            <Dropdown.Item>Переименовать</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>}
       </li>
     )
   });

@@ -14,23 +14,30 @@ const slice = createSlice({
       channels.forEach(channel => {
         state.entities[channel.id] = channel;
       });
-      state.ids.push(channels.map(({ id }) => id));
+      state.ids.push(...channels.map(({ id }) => id));
     },
     addChannel: (state, { payload: channel }) => {
       const { id } = channel;
       state.entities[id] = channel;
       state.ids.push(id);
     },
+    removeChannel: (state, { payload: id }) => {
+      delete state.entities[id];
+      const index = state.ids.indexOf(id);
+      if (index > -1) {
+        state.ids.splice(index, 1);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
       .addMatcher(api.endpoints.getChannels.matchFulfilled, (state, action) => {
         slice.caseReducers.addChannels(state, action);
-      })
+      });
   },
 });
 
 export default slice.reducer;
-export const { addChannels, addChannel } = slice.actions;
+export const { addChannels, addChannel, removeChannel } = slice.actions;
 
 export const selectChannels = (state) => state.channels.entities;

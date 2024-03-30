@@ -35,10 +35,10 @@ const InvalidFeedback = ({ validationError, networkError }) => {
     return 'Что-то пошло не так, попробуйте снова';
   })();
 
-  return <div className="w-100 invalid-feedback text-center">{errorMsg}</div>;
+  return <div className="invalid-feedback text-center w-100 mb-2">{errorMsg}</div>;
 };
 
-const ChannelNameModal = () => {
+const ChannelAddModal = () => {
   const channelEntities = useSelector(selectChannels);
   const isModalShown = useSelector(selectIsModalShown);
   const dispatch = useDispatch();
@@ -89,6 +89,10 @@ const ChannelNameModal = () => {
                 autoFocus
                 isInvalid={!isAddingChannel && (errors.text || addingChannelError)}
               />
+              <InvalidFeedback
+                validationError={errors?.text}
+                networkError={addingChannelError}
+              />
               <Button
                 variant="primary"
                 type="submit"
@@ -100,10 +104,6 @@ const ChannelNameModal = () => {
               <Button variant="secondary" onClick={handleClose}>
                 Закрыть
               </Button>
-              <InvalidFeedback
-                validationError={errors?.text}
-                networkError={addingChannelError}
-              />
             </Form>
           )}
         </Formik>
@@ -112,4 +112,4 @@ const ChannelNameModal = () => {
   );
 };
 
-export default ChannelNameModal;
+export default ChannelAddModal;

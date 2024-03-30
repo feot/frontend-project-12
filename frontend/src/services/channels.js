@@ -12,7 +12,17 @@ export const channelsApi = api.injectEndpoints({
         body: channel,
       }),
     }),
+    removeChannel: build.mutation({
+      query: (id) => ({
+        url: `channels/${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
-export const { useGetChannelsQuery, useAddChannelMutation } = channelsApi;
+export const {
+  useGetChannelsQuery,
+  useAddChannelMutation,
+  useRemoveChannelMutation,
+} = channelsApi;

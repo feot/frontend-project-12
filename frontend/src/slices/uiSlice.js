@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { api } from '../services/api.js';
+import { removeChannel } from './channelsSlice.js';
 
 const initialState = {
   activeChannel: null,
@@ -19,6 +20,10 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(removeChannel, (state) => {
+        state.activeChannel = null;
+        state.isModalShown = false;
+      })
       .addMatcher(api.endpoints.getChannels.matchFulfilled, (state, { payload }) => {
         if (Object.keys(payload).length !== 0) {
           state.activeChannel = Object.values(payload)[0];
