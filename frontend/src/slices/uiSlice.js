@@ -4,6 +4,7 @@ import { removeChannel, renameChannel } from './channelsSlice.js';
 
 const initialState = {
   activeChannel: null,
+  defaultChannel: null,
   isModalShown: false,
 };
 
@@ -21,7 +22,7 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(removeChannel, (state) => {
-        state.activeChannel = null;
+        state.activeChannel = state.defaultChannel;
         state.isModalShown = false;
       })
       .addCase(renameChannel, (state, { payload: channel }) => {
@@ -30,7 +31,9 @@ const slice = createSlice({
       })
       .addMatcher(api.endpoints.getChannels.matchFulfilled, (state, { payload }) => {
         if (Object.keys(payload).length !== 0) {
-          state.activeChannel = Object.values(payload)[0];
+          const defaultChannel = Object.values(payload)[0];
+          state.defaultChannel = defaultChannel;
+          state.activeChannel = defaultChannel;
         }
       })
       .addMatcher(api.endpoints.addChannel.matchFulfilled, (state, { payload }) => {
