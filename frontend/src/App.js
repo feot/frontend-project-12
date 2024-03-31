@@ -21,6 +21,7 @@ import ModalContext from './ModalContext.js';
 
 import MainPage from './pages/main/Main.jsx';
 import LoginPage from './pages/login/Login.jsx';
+import Signup from './pages/signup/Signup.jsx';
 import NotFoundPage from './pages/NotFound.jsx';
 
 const PrivateRoute = ({ isAuthenticated, children }) => {
@@ -55,6 +56,10 @@ const App = () => {
               <Route
                 path="/login"
                 element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+              />
+              <Route
+                path="/signup"
+                element={<Signup />}
               />
               <Route
                 path="/"

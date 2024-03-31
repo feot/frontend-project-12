@@ -2,8 +2,8 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
-import { useLoginMutation } from '../../services/login.js';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useLoginMutation } from '../../services/auth.js';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as yup from 'yup'
 
@@ -27,6 +27,7 @@ const getErrorMsg = (loginError) => {
 
 const Login = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [
     login,
@@ -35,7 +36,6 @@ const Login = () => {
   const loginHandler = (credentials) => login(credentials);
 
   const loginRef = useRef();
-  const passRef = useRef();
 
   useEffect(() => {
     loginRef.current.focus();
@@ -48,6 +48,10 @@ const Login = () => {
     const from = location?.state?.from || '/';
     return <Navigate to={from}/>;
   }
+
+  const handleSignupNav = () => {
+    navigate('/signup')
+  };
 
   return (
     <div className="container">
@@ -68,7 +72,7 @@ const Login = () => {
               handleBlur,
               handleSubmit,
             }) => (
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} className="mb-1">
                 <Form.Group className="mb-3" controlId="username">
                   <FloatingLabel
                     label="username"
@@ -78,7 +82,7 @@ const Login = () => {
                       name="username"
                       autoComplete="username"
                       required
-                      placeholder="username"
+                      placeholder="логин"
                       id="username"
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -97,25 +101,30 @@ const Login = () => {
                       type="password"
                       autoComplete="password"
                       required
-                      placeholder={"password"}
+                      placeholder={"пароль"}
                       id="password"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.password}
-                      ref={passRef}
                       isInvalid={(touched.password && errors.password) || authFailed}
                     />
                     {authErrorMessage && <div className="text-center invalid-feedback">{authErrorMessage}</div>}
                   </FloatingLabel>
                 </Form.Group>
                 <div className="d-grid gap-2">
-                  <Button variant="outline-primary" type="submit" disabled={isLoggingIn}>
+                  <Button variant="primary" type="submit" disabled={isLoggingIn}>
                     Войти
                   </Button>
                 </div>
               </Form>
             )}
           </Formik>
+          <Button
+            variant="outline-primary"
+            onClick={handleSignupNav}
+          >
+            Создать аккаунт
+          </Button>
         </div>
       </div>
     </div>

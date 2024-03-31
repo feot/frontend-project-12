@@ -29,6 +29,14 @@ const slice = createSlice({
         state.token = token;
         state.isAuthenticated = isAuthenticated;
         localStorage.setItem('auth', JSON.stringify({ user, token, isAuthenticated }));
+      })
+      .addMatcher(api.endpoints.signup.matchFulfilled, (state, action) => {
+        const { username: user, token } = action.payload;
+        const isAuthenticated = true;
+        state.user = user;
+        state.token = token;
+        state.isAuthenticated = isAuthenticated;
+        localStorage.setItem('auth', JSON.stringify({ user, token, isAuthenticated }));
       });
   },
 });
