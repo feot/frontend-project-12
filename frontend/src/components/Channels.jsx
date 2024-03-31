@@ -52,8 +52,9 @@ const Channels = () => {
       <li key={id} className="nav-item d-flex w-100">
         <Button
           variant={channelBtnVariant}
-          className="w-100 rounded-0 text-start"
+          className="w-100 rounded-0 text-start text-truncate overflow-hidden"
           onClick={() => handleChannelSelect(id)}
+          title={channelName}
         >
           {channelName}
         </Button>
