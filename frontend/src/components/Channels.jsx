@@ -39,8 +39,8 @@ const Channels = () => {
     dispatch(setIsModalShown(true));
   }
 
-  const handleChannelRename = (id) => {
-    setModal(<ChannelRenameModal id={id} />);
+  const handleChannelRename = (id, name) => {
+    setModal(<ChannelRenameModal id={id} prevName={name} />);
     dispatch(setIsModalShown(true));
   }
 
@@ -70,8 +70,16 @@ const Channels = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item onClick={() => handleChannelDelete(id)}>{t('channels.delete')}</Dropdown.Item>
-            <Dropdown.Item onClick={() => handleChannelRename(id)}>{t('channels.rename')}</Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => handleChannelDelete(id)}
+            >
+              {t('channels.delete')}
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => handleChannelRename(id, name)}
+            >
+              {t('channels.rename')}
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>}
       </li>

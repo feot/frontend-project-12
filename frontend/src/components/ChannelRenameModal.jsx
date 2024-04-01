@@ -31,7 +31,7 @@ const InvalidFeedback = ({ validationError, networkError, t }) => {
   return <div className="invalid-feedback text-center w-100 mb-2">{errorMsg}</div>;
 };
 
-const ChannelRenameModal = ({ id }) => {
+const ChannelRenameModal = ({ id, prevName }) => {
   const channelEntities = useSelector(selectChannels);
   const isModalShown = useSelector(selectIsModalShown);
   const dispatch = useDispatch();
@@ -54,7 +54,8 @@ const ChannelRenameModal = ({ id }) => {
 
   useEffect(() => {
     textInputRef.current.focus();
-  }, [])
+    textInputRef.current.select();
+  }, [isModalShown]);
 
   return (
     <Modal show={isModalShown} onHide={handleClose}>
@@ -63,7 +64,7 @@ const ChannelRenameModal = ({ id }) => {
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ text: '' }}
+          initialValues={{ text: prevName }}
           validationSchema={getValidationSchema(existingChannelNames)}
           validateOnChange={false}
           onSubmit={({ text }) => {

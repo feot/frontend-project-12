@@ -54,7 +54,7 @@ const ChannelAddModal = () => {
 
   useEffect(() => {
     textInputRef.current.focus();
-  }, [])
+  }, [isModalShown]);
 
   return (
     <Modal show={isModalShown} onHide={handleClose}>
