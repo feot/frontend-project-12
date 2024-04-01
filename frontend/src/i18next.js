@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import resources from './locales/index.js';
 
-const isProdEnvironment = process.env.RUNTIME_ENV === 'production';
+const isProdEnvironment = process.env.NODE_ENV === 'production';
 const lng = (isProdEnvironment) ? 'en' : 'ru';
 
 i18n 
@@ -10,7 +10,6 @@ i18n
   .init({
     resources,
     lng,
-    debug: true, // TODO: remove later
     interpolation: {
       escapeValue: false,
     },
