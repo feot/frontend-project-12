@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { selectIsAuthenticated, logout } from './slices/authSlice.js';
 import {
   BrowserRouter,
@@ -35,6 +36,7 @@ const PrivateRoute = ({ isAuthenticated, children }) => {
 const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectIsAuthenticated);
+  const { t } = useTranslation();
 
   const [Modal, setModal] = useState(null);
 
@@ -45,8 +47,8 @@ const App = () => {
           <header className="shadow-sm">
             <Navbar bg="white" expand="lg">
               <Container>
-                <Navbar.Brand as={Link} to="/">Chat</Navbar.Brand>
-                {isAuthenticated && <Button onClick={() => dispatch(logout())}>Выйти</Button>}
+                <Navbar.Brand as={Link} to="/">{t('header.logo')}</Navbar.Brand>
+                {isAuthenticated && <Button onClick={() => dispatch(logout())}>{t('header.logout')}</Button>}
               </Container>
             </Navbar>
           </header>

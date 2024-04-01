@@ -2,10 +2,11 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
-import { useSignupMutation } from '../../services/auth.js';
 import { Navigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as yup from 'yup'
+import { useSignupMutation } from '../../services/auth.js';
 
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -13,44 +14,31 @@ import Button from 'react-bootstrap/Button';
 
 const schema = yup.object().shape({
   username: yup.string().trim()
-    .min(3, 'min3')
-    .max(20, 'max20')
+    .min(3, 'minmax')
+    .max(20, 'minmax')
     .required('required'),
   password: yup.string()
-    .min(6, 'min6')
+    .min(6, 'passwordMin')
     .required('required'),
   confirmPassword: yup.string()
     .oneOf([yup.ref('password')], 'confirmPass')
     .required('required'),
 });
 
-const InvalidFeedback = ({ validationError, serverError }) => {
+const InvalidFeedback = ({ validationError, serverError, t }) => {
   if (!validationError && !serverError) {
     return null;
   }
-
-  const errorMsg = (() => {
-    if (validationError === 'min3') {
-      return 'Не меньше 3 символов';
-    } else if (validationError === 'min6') {
-      return 'Не меньше 6 символов';
-    } else if (validationError === 'max20') {
-      return 'Не больше 20 символов';
-    } else if (validationError === 'confirmPass') {
-      return 'Пароли должны совпадать';
-    } else if (validationError === 'required') {
-      return 'Поле не может быть пустым';
-    } else if (serverError?.status === 409) {
-      return 'Пользователь с таким именем уже есть';
-    }
-    return 'Что-то пошло не так, попробуйте снова';
-  })();
+  const errorMsg = (validationError)
+    ? t(`errors.${validationError}`)
+    : t('errors.network');
 
   return <div className="invalid-feedback text-center w-100 mb-2">{errorMsg}</div>;
 };
 
 const Signup = () => {
   const location = useLocation();
+  const { t } = useTranslation();
 
   const [
     signup,
@@ -100,14 +88,14 @@ const Signup = () => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
                   <FloatingLabel
-                    label="Логин"
+                    label={t('signup.username')}
                     className="mb-3"
                   >
                     <Form.Control
                       name="username"
                       autoComplete="username"
                       required
-                      placeholder="Логин"
+                      placeholder={t('signup.username')}
                       id="username"
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -115,38 +103,38 @@ const Signup = () => {
                       ref={usernameRef}
                       isInvalid={(touched.username && errors.username) || signupFailed}
                     />
-                    <InvalidFeedback validationError={errors.username} />
+                    <InvalidFeedback validationError={errors.username} t={t} />
                   </FloatingLabel>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="password">
                   <FloatingLabel
-                    label={"Пароль"}
+                    label={t('signup.password')}
                     className="mb-3"
                   >
                     <Form.Control
                       type="password"
                       autoComplete="new-password"
                       required
-                      placeholder={"Пароль"}
+                      placeholder={t('signup.password')}
                       id="password"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.password}
                       isInvalid={(touched.password && errors.password) || signupFailed}
                     />
-                    <InvalidFeedback validationError={errors.password} />
+                    <InvalidFeedback validationError={errors.password} t={t} />
                   </FloatingLabel>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="password">
                   <FloatingLabel
-                    label={"Подтвердите пароль"}
+                    label={t('signup.confirmPassword')}
                     className="mb-3"
                   >
                     <Form.Control
                       type="password"
                       autoComplete="new-password"
                       required
-                      placeholder={"Подтвердите пароль"}
+                      placeholder={t('signup.confirmPassword')}
                       id="confirmPassword"
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -158,12 +146,13 @@ const Signup = () => {
                     <InvalidFeedback
                       validationError={errors.confirmPassword}
                       serverError={signupError}
+                      t={t}
                     />
                   </FloatingLabel>
                 </Form.Group>
                 <div className="d-grid gap-2">
                   <Button variant="outline-primary" type="submit" disabled={isSigningUp}>
-                    Зарегистрироваться
+                    {t('signup.submit')}
                   </Button>
                 </div>
               </Form>

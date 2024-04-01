@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -10,20 +11,16 @@ import { selectActiveChannel } from '../slices/uiSlice.js';
 import { selectUsername } from '../slices/authSlice.js';
 
 const schema = yup.object().shape({
-  text: yup.string().trim().required('Required'),
+  text: yup.string().trim().required('required'),
 });
 
-const InvalidFeedback = ({ validationError, networkError }) => {
+const InvalidFeedback = ({ validationError, networkError, t }) => {
   if (!validationError && !networkError) {
     return null;
   }
-
-  const errorMsg = (() => {
-    if (validationError === 'required') {
-      return 'Поле не может быть пустым';
-    }
-    return 'Что-то пошло не так, попробуйте снова';
-  })();
+  const errorMsg = (validationError)
+    ? t(`errors.${validationError}`)
+    : t('errors.network');
 
   return <div className="w-100 invalid-feedback text-center">{errorMsg}</div>;
 };
@@ -31,6 +28,7 @@ const InvalidFeedback = ({ validationError, networkError }) => {
 const ChatForm = () => {
   const activeChannel = useSelector(selectActiveChannel);
   const username = useSelector(selectUsername);
+  const { t } = useTranslation();
   const [
     sendMessage,
     { error: sendMessageError, isLoading: isSendingMessage }
@@ -69,7 +67,7 @@ const ChatForm = () => {
           <Form.Control
             name="text"
             required
-            placeholder="Введите сообщение"
+            placeholder={t('msgForm.inputPlaceholder')}
             id="text"
             className="w-auto flex-grow-1"
             value={values.text}
@@ -78,11 +76,12 @@ const ChatForm = () => {
             isInvalid={!isSendingMessage && (errors.text || sendMessageError)}
           />
           <Button variant="outline-primary" type="submit" disabled={isSendingMessage}>
-            Отправить
+            {t('msgForm.submit')}
           </Button>
           <InvalidFeedback
             validationError={errors?.text}
             networkError={sendMessageError}
+            t={t}
           />
         </Form>
       )}

@@ -5,8 +5,6 @@ import { useGetMessagesQuery } from '../services/messages.js';
 import { selectActiveChannel } from '../slices/uiSlice.js';
 import { selectMessages } from '../slices/messagesSlice.js';
 
-// const socket = io();
-
 const Messages = () => {
   const { isError } = useGetMessagesQuery();
   const activeChannel = useSelector(selectActiveChannel);

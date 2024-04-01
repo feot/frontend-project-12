@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -12,28 +13,20 @@ const getValidationSchema = (existingChannelNames) => {
   return yup.object().shape({
     text: yup.string()
       .trim()
-      .min(3, 'min')
-      .max(20, 'max')
+      .min(3, 'minmax')
+      .max(20, 'minmax')
       .required('required')
-      .notOneOf(existingChannelNames, 'repeat'),
+      .notOneOf(existingChannelNames, 'channelRepeat'),
   });
 }
 
-const InvalidFeedback = ({ validationError, networkError }) => {
+const InvalidFeedback = ({ validationError, networkError, t }) => {
   if (!validationError && !networkError) {
     return null;
   }
-
-  const errorMsg = (() => {
-    if (validationError === 'min' || validationError === 'max') {
-      return 'Название должно быть не меньше 3 и не больше 20 символов';
-    } else if (validationError === 'repeat') {
-      return 'Такой канал уже есть';
-    } else if (validationError === 'required') {
-      return 'Поле не может быть пустым';
-    }
-    return 'Что-то пошло не так, попробуйте снова';
-  })();
+  const errorMsg = (validationError)
+    ? t(`errors.${validationError}`)
+    : t('errors.network');
 
   return <div className="invalid-feedback text-center w-100 mb-2">{errorMsg}</div>;
 };
@@ -43,6 +36,7 @@ const ChannelAddModal = () => {
   const isModalShown = useSelector(selectIsModalShown);
   const dispatch = useDispatch();
   const textInputRef = useRef();
+  const { t } = useTranslation();
   const existingChannelNames = Object.values(channelEntities).map(({ name }) => name);
   const [
     addChannel,
@@ -65,7 +59,7 @@ const ChannelAddModal = () => {
   return (
     <Modal show={isModalShown} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('modal.add.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Formik
@@ -86,7 +80,7 @@ const ChannelAddModal = () => {
               <Form.Control
                 name="text"
                 required
-                placeholder="Введите название"
+                placeholder={t('modal.add.inputPlaceholder')}
                 id="text"
                 className="mb-2"
                 value={values.text}
@@ -97,6 +91,7 @@ const ChannelAddModal = () => {
               <InvalidFeedback
                 validationError={errors?.text}
                 networkError={addingChannelError}
+                t={t}
               />
               <Button
                 variant="primary"
@@ -104,10 +99,10 @@ const ChannelAddModal = () => {
                 disabled={isAddingChannel}
                 className="ms-auto me-1"
               >
-                Добавить
+                {t('modal.add.submit')}
               </Button>
               <Button variant="secondary" onClick={handleClose}>
-                Отмена
+                {t('modal.cancel')}
               </Button>
             </Form>
           )}

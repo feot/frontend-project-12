@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dropdown, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 import ModalContext from '../ModalContext.js';
 import ChannelAddModal from './ChannelAddModal.jsx';
@@ -18,6 +19,7 @@ const Channels = () => {
   const { isError } = useGetChannelsQuery();
   const activeChannel = useSelector(selectActiveChannel);
   const channelEntities = useSelector(selectChannels);
+  const { t } = useTranslation();
 
   if (isError || !Object.keys(channelEntities).length) {
     return null;
@@ -68,8 +70,8 @@ const Channels = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item onClick={() => handleChannelDelete(id)}>Удалить</Dropdown.Item>
-            <Dropdown.Item onClick={() => handleChannelRename(id)}>Переименовать</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleChannelDelete(id)}>{t('channels.delete')}</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleChannelRename(id)}>{t('channels.rename')}</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>}
       </li>
@@ -79,7 +81,7 @@ const Channels = () => {
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <b>Каналы</b>
+        <b>{t('channels.title')}</b>
         <button className="btn" onClick={handleChannelAdd}>+</button>
       </div>
       <div className="overflow-auto h-100">

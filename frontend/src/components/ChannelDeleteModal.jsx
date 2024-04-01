@@ -1,14 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 import { selectIsModalShown, setIsModalShown } from '../slices/uiSlice.js';
 import { useRemoveChannelMutation } from '../services/channels.js';
 
-const InvalidFeedback = ({ networkError }) => {
+const InvalidFeedback = ({ networkError, t }) => {
   if (!networkError) {
     return null;
   }
-  const errorMsg = 'Что-то пошло не так, попробуйте снова';
+  const errorMsg = t('errors.network');
 
   return <div className="w-100 invalid-feedback text-center">{errorMsg}</div>;
 };
@@ -16,6 +17,7 @@ const InvalidFeedback = ({ networkError }) => {
 const ChannelDeleteModal = ({ id }) => {
   const isModalShown = useSelector(selectIsModalShown);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [
     removeChannel,
     {
@@ -33,10 +35,10 @@ const ChannelDeleteModal = ({ id }) => {
   return (
     <Modal show={isModalShown} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('modal.delete.title')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Вы уверены?</p>
+        <p>{t('modal.delete.bodyText')}</p>
         <div className="d-flex">
           <Button
             variant="danger"
@@ -45,12 +47,12 @@ const ChannelDeleteModal = ({ id }) => {
             disabled={isRemovingChannel}
             onClick={handleRemoveChannel}
           >
-            Да
+            {t('modal.delete.submit')}
           </Button>
           <Button variant="secondary" onClick={handleClose}>
-            Отмена
+            {t('modal.cancel')}
           </Button>
-          <InvalidFeedback networkError={removingChannelError} />
+          <InvalidFeedback networkError={removingChannelError} t={t} />
         </div>
       </Modal.Body>
     </Modal>
