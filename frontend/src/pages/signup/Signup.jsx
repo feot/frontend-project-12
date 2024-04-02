@@ -29,9 +29,10 @@ const InvalidFeedback = ({ validationError, serverError, t }) => {
   if (!validationError && !serverError) {
     return null;
   }
+  const serverErrorType = (serverError?.status === 409) ? 'userExists' : 'network';
   const errorMsg = (validationError)
     ? t(`errors.${validationError}`)
-    : t('errors.network');
+    : t(`errors.${serverErrorType}`);
 
   return <div className="invalid-feedback text-center w-100 mb-2">{errorMsg}</div>;
 };

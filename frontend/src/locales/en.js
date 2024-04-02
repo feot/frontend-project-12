@@ -53,7 +53,15 @@ const en = {
       passwordMin: 'At least 6 characters',
       confirmPass: 'Passwords must match',
       channelRepeat: 'Channel already exists',
+      auth: 'Invalid credentials',
+      userExists: 'Username is already in use',
       network: 'Network error',
+    },
+    toastify: {
+      channelAdded: 'Channel created',
+      channelDeleted: 'Channel deleted',
+      channelRenamed: 'Channel renamed',
+      network: 'Check your connection',
     },
   },
 };

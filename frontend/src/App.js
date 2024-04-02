@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { selectIsAuthenticated, logout } from './slices/authSlice.js';
 import {
   BrowserRouter,
   Routes,
@@ -17,8 +16,11 @@ import {
   Navbar,
   Button,
 } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import ModalContext from './ModalContext.js';
+import { selectIsAuthenticated, logout } from './slices/authSlice.js';
 
 import MainPage from './pages/main/Main.jsx';
 import LoginPage from './pages/login/Login.jsx';
@@ -76,6 +78,7 @@ const App = () => {
           </main>
         </div>
         {Modal}
+        <ToastContainer />
       </BrowserRouter>
     </ModalContext.Provider>
   );

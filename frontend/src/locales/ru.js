@@ -53,7 +53,15 @@ const ru = {
       passwordMin: 'Не менее 6 символов',
       confirmPass: 'Пароли должны совпадать',
       channelRepeat: 'Канал уже существует',
+      auth: 'Неверные имя пользователя или пароль',
+      userExists: 'Такой пользователь уже существует',
       network: 'Ошибка сети',
+    },
+    toastify: {
+      channelAdded: 'Канал создан',
+      channelDeleted: 'Канал удалён',
+      channelRenamed: 'Канал переименован',
+      network: 'Проверьте соединение',
     },
   },
 };

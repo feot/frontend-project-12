@@ -1,6 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { api } from '../services/api.js';
 import { removeChannel, renameChannel } from './channelsSlice.js';
+import { toast } from 'react-toastify';
+import { t } from 'i18next';
 
 const initialState = {
   activeChannel: null,
@@ -20,6 +22,18 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    const matchRejectedCases = [
+      api.endpoints.login.matchRejected,
+      api.endpoints.signup.matchRejected,
+      api.endpoints.getChannels.matchRejected,
+      api.endpoints.getMessages.matchRejected,
+      api.endpoints.addChannel.matchRejected,
+      api.endpoints.removeChannel.matchRejected,
+      api.endpoints.renameChannel.matchRejected,
+      api.endpoints.getChannels.matchRejected,
+      api.endpoints.sendMessage.matchRejected,
+    ];
+
     builder
       .addCase(removeChannel, (state) => {
         state.activeChannel = state.defaultChannel;
@@ -39,6 +53,16 @@ const slice = createSlice({
       .addMatcher(api.endpoints.addChannel.matchFulfilled, (state, { payload }) => {
         state.activeChannel = payload;
         state.isModalShown = false;
+        toast.success(t('toastify.channelAdded'));
+      })
+      .addMatcher(api.endpoints.removeChannel.matchFulfilled, () => {
+        toast.success(t('toastify.channelDeleted'));
+      })
+      .addMatcher(api.endpoints.renameChannel.matchFulfilled, () => {
+        toast.success(t('toastify.channelRenamed'));
+      })
+      .addMatcher(isAnyOf (...matchRejectedCases), () => {
+        toast.error(t('toastify.network'));
       });
   },
 });
