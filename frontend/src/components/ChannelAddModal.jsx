@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import profanityFilter from 'leo-profanity';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -9,16 +10,19 @@ import { selectChannels } from '../slices/channelsSlice.js';
 import { selectIsModalShown, setIsModalShown } from '../slices/uiSlice.js';
 import { useAddChannelMutation } from '../services/channels.js';
 
-const getValidationSchema = (existingChannelNames) => {
-  return yup.object().shape({
-    text: yup.string()
-      .trim()
-      .min(3, 'minmax')
-      .max(20, 'minmax')
-      .required('required')
-      .notOneOf(existingChannelNames, 'channelRepeat'),
-  });
-}
+const getValidationSchema = (existingChannelNames) => yup.object().shape({
+  text: yup.string()
+    .trim()
+    .min(3, 'minmax')
+    .max(20, 'minmax')
+    .required('required')
+    .notOneOf(existingChannelNames, 'channelRepeat')
+    .test(
+      'notExpletive',
+      'profanity',
+      (value) => profanityFilter.check(value) === false,
+    ),
+});
 
 const InvalidFeedback = ({ validationError, networkError, t }) => {
   if (!validationError && !networkError) {
@@ -47,7 +51,9 @@ const ChannelAddModal = () => {
   ] = useAddChannelMutation();
 
   const handleAddChannel = (name) => {
-    addChannel({ name });
+    const nameProfanityFiltered = profanityFilter.clean(name);
+    console.log({ nameProfanityFiltered });
+    addChannel({ name: nameProfanityFiltered });
   };
 
   const handleClose = () => dispatch(setIsModalShown(false));

@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import profanityFilter from 'leo-profanity';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -16,7 +17,12 @@ const getValidationSchema = (existingChannelNames) => {
       .min(3, 'minmax')
       .max(20, 'minmax')
       .required('required')
-      .notOneOf(existingChannelNames, 'channelRepeat'),
+      .notOneOf(existingChannelNames, 'channelRepeat')
+      .test(
+        'notExpletive',
+        'profanity',
+        (value) => profanityFilter.check(value) === false,
+      ),
   });
 }
 

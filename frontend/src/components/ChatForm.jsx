@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import profanityFilter from 'leo-profanity';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -36,10 +37,11 @@ const ChatForm = () => {
 
   const handleSendMessage = (text) => {
     const channelId = activeChannel?.id;
+    const textProfanityFiltered = profanityFilter.clean(text);
 
     if (channelId) {
       const newMessage = {
-        body: text,
+        body: textProfanityFiltered,
         channelId: activeChannel.id,
         username,
       };
