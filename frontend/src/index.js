@@ -4,15 +4,36 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './store.js';
 import reportWebVitals from './reportWebVitals';
+import {
+  Provider as RollBarProvider,
+  ErrorBoundary
+} from '@rollbar/react';
 
 import './i18next.js';
 
 import './index.css';
 
+const {
+  REACT_APP_RUNTIME_ENV : nodeEnv,
+  REACT_APP_ROLLBAR_CLIENT_TOKEN: rollbarAccessToken,
+} =  process.env;
+const environment = (nodeEnv === 'production') ? 'production' : 'dev';
+
+const rollbarConfig = {
+  accessToken: rollbarAccessToken,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+  environment,
+};
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
-    <App />
+    <RollBarProvider config={rollbarConfig}>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </RollBarProvider>
   </Provider>
 );
 
