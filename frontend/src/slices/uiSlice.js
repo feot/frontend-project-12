@@ -23,8 +23,6 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     const matchRejectedCases = [
-      api.endpoints.login.matchRejected,
-      api.endpoints.signup.matchRejected,
       api.endpoints.getChannels.matchRejected,
       api.endpoints.getMessages.matchRejected,
       api.endpoints.addChannel.matchRejected,

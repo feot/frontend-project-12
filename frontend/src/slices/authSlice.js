@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { api } from '../services/api.js';
+import { toast } from 'react-toastify';
+import { t } from 'i18next';
 
 const initialState = {
   user: null,
@@ -37,6 +39,18 @@ const slice = createSlice({
         state.token = token;
         state.isAuthenticated = isAuthenticated;
         localStorage.setItem('auth', JSON.stringify({ user, token, isAuthenticated }));
+      })
+      .addMatcher(api.endpoints.login.matchRejected, (_, action) => {
+        const { status } = action.payload;
+        if (status !== 401) {
+          toast.error(t('toastify.network'));
+        }
+      })
+      .addMatcher(api.endpoints.signup.matchRejected, (_, action) => {
+        const { status } = action.payload;
+        if (status !== 409) {
+          toast.error(t('toastify.network'));
+        }
       });
   },
 });
