@@ -53,7 +53,7 @@ const Channels = () => {
       <li key={id} className="nav-item d-flex w-100">
         <Button
           variant={channelBtnVariant}
-          className="w-100 rounded-0 text-start text-truncate overflow-hidden"
+          className="w-100 rounded-0 text-start text-truncate"
           onClick={() => handleChannelSelect(id)}
           title={name}
         >
@@ -67,6 +67,7 @@ const Channels = () => {
             id="channel_dropdown"
             className="rounded-0 px-1"
           >
+            <span className="visually-hidden">{t('channels.manage')}</span>
           </Dropdown.Toggle>
 
           <Dropdown.Menu>

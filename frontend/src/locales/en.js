@@ -24,6 +24,7 @@ const en = {
     },
     channels: {
       title: 'Channels',
+      manage: 'Manage channel',
       delete: 'Delete',
       rename: 'Rename',
     },

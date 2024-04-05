@@ -75,10 +75,7 @@ const ChannelRenameModal = ({ id, prevName }) => {
           initialValues={{ newChannelName: prevName }}
           validationSchema={getValidationSchema(existingChannelNames)}
           validateOnChange={false}
-          onSubmit={({ newChannelName }, { setFieldValue }) => {
-            console.log('setFieldValue', setFieldValue)
-            setFieldValue('newChannelName', profanityFilter(newChannelName), false);
-            console.log('newChannelName', newChannelName);
+          onSubmit={({ newChannelName }) => {
             handleRenameChannel(id, newChannelName);
           }}
         >

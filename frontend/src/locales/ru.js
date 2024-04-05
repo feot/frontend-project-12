@@ -24,6 +24,7 @@ const ru = {
     },
     channels: {
       title: 'Каналы',
+      manage: 'Управление каналом',
       delete: 'Удалить',
       rename: 'Переименовать',
     },
