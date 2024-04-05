@@ -22,12 +22,8 @@ const getValidationSchema = (existingChannelNames) => {
       .min(3, 'minmax')
       .max(20, 'minmax')
       .required('required')
-      .notOneOf(existingChannelNames, 'channelRepeat')
-      .test(
-        'notExpletive',
-        'profanity',
-        (value) => profanityFilter.check(value) === false,
-      ),
+      .transform((value) => profanityFilter.clean(value))
+      .notOneOf(existingChannelNames, 'channelRepeat'),
   });
 }
 
@@ -58,7 +54,8 @@ const ChannelRenameModal = ({ id, prevName }) => {
   ] = useRenameChannelMutation();
 
   const handleRenameChannel = (id, name) => {
-    renameChannel({ id, name });
+    const nameProfanityFiltered = profanityFilter.clean(name);
+    renameChannel({ id, name: nameProfanityFiltered });
   };
 
   const handleClose = () => dispatch(setIsModalShown(false));
@@ -78,7 +75,10 @@ const ChannelRenameModal = ({ id, prevName }) => {
           initialValues={{ newChannelName: prevName }}
           validationSchema={getValidationSchema(existingChannelNames)}
           validateOnChange={false}
-          onSubmit={({ newChannelName }) => {
+          onSubmit={({ newChannelName }, { setFieldValue }) => {
+            console.log('setFieldValue', setFieldValue)
+            setFieldValue('newChannelName', profanityFilter(newChannelName), false);
+            console.log('newChannelName', newChannelName);
             handleRenameChannel(id, newChannelName);
           }}
         >

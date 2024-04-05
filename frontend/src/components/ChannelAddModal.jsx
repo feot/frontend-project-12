@@ -21,12 +21,8 @@ const getValidationSchema = (existingChannelNames) => yup.object().shape({
     .min(3, 'minmax')
     .max(20, 'minmax')
     .required('required')
-    .notOneOf(existingChannelNames, 'channelRepeat')
-    .test(
-      'notExpletive',
-      'profanity',
-      (value) => profanityFilter.check(value) === false,
-    ),
+    .transform((value) => profanityFilter.clean(value))
+    .notOneOf(existingChannelNames, 'channelRepeat'),
 });
 
 const InvalidFeedback = ({ validationError, networkError, t }) => {
@@ -57,7 +53,6 @@ const ChannelAddModal = () => {
 
   const handleAddChannel = (name) => {
     const nameProfanityFiltered = profanityFilter.clean(name);
-    console.log({ nameProfanityFiltered });
     addChannel({ name: nameProfanityFiltered });
   };
 

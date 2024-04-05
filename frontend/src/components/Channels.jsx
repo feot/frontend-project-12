@@ -46,7 +46,6 @@ const Channels = () => {
 
   const channelEls = Object.values(channelEntities).map((channel) => {
     const { id, name, removable } = channel;
-    const channelName = `# ${name}`;
     const isActive = id === activeChannel?.id;
     const channelBtnVariant = (isActive) ? 'secondary' : 'none';
 
@@ -56,9 +55,10 @@ const Channels = () => {
           variant={channelBtnVariant}
           className="w-100 rounded-0 text-start text-truncate overflow-hidden"
           onClick={() => handleChannelSelect(id)}
-          title={channelName}
+          title={name}
         >
-          {channelName}
+          <span className="me-1">#</span>
+          {name}
         </Button>
 
         {removable && <Dropdown>

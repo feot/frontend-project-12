@@ -56,7 +56,6 @@ const en = {
       channelRepeat: 'Channel already exists',
       auth: 'Invalid credentials',
       userExists: 'Username is already in use',
-      profanity: 'Swear words are prohibited',
       network: 'Network error',
     },
     toastify: {
