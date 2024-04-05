@@ -3,8 +3,8 @@ import { initReactI18next } from 'react-i18next';
 import profanityFilter from 'leo-profanity';
 import resources from './locales/index.js';
 
-const isProdEnvironment = process.env.NODE_ENV === 'production';
-const lng = (isProdEnvironment) ? 'en' : 'ru';
+const { REACT_APP_RUNTIME_ENV : runtimeEnv } =  process.env;
+const lng = (runtimeEnv === 'production') ? 'en' : 'ru';
 
 const profanityFilterInit = () => {
   profanityFilter.list()
