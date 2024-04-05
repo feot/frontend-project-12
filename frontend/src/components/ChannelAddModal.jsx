@@ -1,6 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Modal, Form } from 'react-bootstrap';
+import {
+  Button,
+  Modal,
+  Form,
+  FloatingLabel,
+} from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import profanityFilter from 'leo-profanity';
 import { Formik } from 'formik';
@@ -11,7 +16,7 @@ import { selectIsModalShown, setIsModalShown } from '../slices/uiSlice.js';
 import { useAddChannelMutation } from '../services/channels.js';
 
 const getValidationSchema = (existingChannelNames) => yup.object().shape({
-  text: yup.string()
+  channelName: yup.string()
     .trim()
     .min(3, 'minmax')
     .max(20, 'minmax')
@@ -69,11 +74,11 @@ const ChannelAddModal = () => {
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ text: '' }}
+          initialValues={{ channelName: '' }}
           validationSchema={getValidationSchema(existingChannelNames)}
           validateOnChange={false}
-          onSubmit={({ text }) => {
-            handleAddChannel(text);
+          onSubmit={({ channelName }) => {
+            handleAddChannel(channelName);
           }}
         >
           {({
@@ -83,22 +88,26 @@ const ChannelAddModal = () => {
             handleSubmit,
           }) => (
             <Form onSubmit={handleSubmit} className="d-flex flex-wrap">
-              <Form.Control
-                name="text"
-                required
-                placeholder={t('modal.add.inputPlaceholder')}
-                id="text"
-                className="mb-2"
-                value={values.text}
-                onChange={handleChange}
-                ref={textInputRef}
-                isInvalid={!isAddingChannel && (errors.text || addingChannelError)}
-              />
-              <InvalidFeedback
-                validationError={errors?.text}
-                networkError={addingChannelError}
-                t={t}
-              />
+              <FloatingLabel
+                label={t('modal.add.inputLabel')}
+                controlId="channelName"
+                className="w-100 mb-2"
+              >
+                <Form.Control
+                  name="channelName"
+                  required
+                  placeholder={t('modal.add.inputLabel')}
+                  value={values.channelName}
+                  onChange={handleChange}
+                  ref={textInputRef}
+                  isInvalid={!isAddingChannel && (errors.channelName || addingChannelError)}
+                />
+                <InvalidFeedback
+                  validationError={errors?.channelName}
+                  networkError={addingChannelError}
+                  t={t}
+                />
+              </FloatingLabel>
               <Button
                 variant="primary"
                 type="submit"

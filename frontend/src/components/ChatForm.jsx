@@ -4,8 +4,7 @@ import profanityFilter from 'leo-profanity';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import { Form, Button } from 'react-bootstrap';
 
 import { useSendMessageMutation } from '../services/messages.js';
 import { selectActiveChannel } from '../slices/uiSlice.js';
@@ -69,6 +68,7 @@ const ChatForm = () => {
           <Form.Control
             name="text"
             required
+            aria-label={t('msgForm.inputLabel')}
             placeholder={t('msgForm.inputPlaceholder')}
             id="text"
             className="w-auto flex-grow-1"

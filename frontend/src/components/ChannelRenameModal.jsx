@@ -1,6 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Modal, Form } from 'react-bootstrap';
+import {
+  Button,
+  Modal,
+  Form,
+  FloatingLabel,
+} from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import profanityFilter from 'leo-profanity';
 import { Formik } from 'formik';
@@ -12,7 +17,7 @@ import { useRenameChannelMutation } from '../services/channels.js';
 
 const getValidationSchema = (existingChannelNames) => {
   return yup.object().shape({
-    text: yup.string()
+    newChannelName: yup.string()
       .trim()
       .min(3, 'minmax')
       .max(20, 'minmax')
@@ -70,11 +75,11 @@ const ChannelRenameModal = ({ id, prevName }) => {
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ text: prevName }}
+          initialValues={{ newChannelName: prevName }}
           validationSchema={getValidationSchema(existingChannelNames)}
           validateOnChange={false}
-          onSubmit={({ text }) => {
-            handleRenameChannel(id, text);
+          onSubmit={({ newChannelName }) => {
+            handleRenameChannel(id, newChannelName);
           }}
         >
           {({
@@ -84,22 +89,26 @@ const ChannelRenameModal = ({ id, prevName }) => {
             handleSubmit,
           }) => (
             <Form onSubmit={handleSubmit} className="d-flex flex-wrap">
-              <Form.Control
-                name="text"
-                required
-                placeholder={t('modal.rename.inputPlaceholder')}
-                id="text"
-                className="mb-2"
-                value={values.text}
-                onChange={handleChange}
-                ref={textInputRef}
-                isInvalid={!isRenamingChannel && (errors.text || renameChannelError)}
-              />
-              <InvalidFeedback
-                validationError={errors?.text}
-                networkError={renameChannelError}
-                t={t}
-              />
+              <FloatingLabel
+                label={t('modal.rename.inputLabel')}
+                controlId="newChannelName"
+                className="w-100 mb-2"
+              >
+                <Form.Control
+                  name="newChannelName"
+                  required
+                  placeholder={t('modal.rename.inputLabel')}
+                  value={values.newChannelName}
+                  onChange={handleChange}
+                  ref={textInputRef}
+                  isInvalid={!isRenamingChannel && (errors.newChannelName || renameChannelError)}
+                />
+                <InvalidFeedback
+                  validationError={errors?.newChannelName}
+                  networkError={renameChannelError}
+                  t={t}
+                />
+              </FloatingLabel>
               <Button
                 variant="primary"
                 type="submit"

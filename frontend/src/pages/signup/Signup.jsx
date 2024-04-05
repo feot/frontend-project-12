@@ -90,6 +90,7 @@ const Signup = () => {
                 <Form.Group className="mb-3" controlId="username">
                   <FloatingLabel
                     label={t('signup.username')}
+                    controlId="username"
                     className="mb-3"
                   >
                     <Form.Control
@@ -97,7 +98,6 @@ const Signup = () => {
                       autoComplete="username"
                       required
                       placeholder={t('signup.username')}
-                      id="username"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.username}
@@ -110,6 +110,7 @@ const Signup = () => {
                 <Form.Group className="mb-3" controlId="password">
                   <FloatingLabel
                     label={t('signup.password')}
+                    controlId="password"
                     className="mb-3"
                   >
                     <Form.Control
@@ -117,7 +118,6 @@ const Signup = () => {
                       autoComplete="new-password"
                       required
                       placeholder={t('signup.password')}
-                      id="password"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.password}
@@ -129,6 +129,7 @@ const Signup = () => {
                 <Form.Group className="mb-3" controlId="password">
                   <FloatingLabel
                     label={t('signup.confirmPassword')}
+                    controlId="confirmPassword"
                     className="mb-3"
                   >
                     <Form.Control
@@ -136,7 +137,6 @@ const Signup = () => {
                       autoComplete="new-password"
                       required
                       placeholder={t('signup.confirmPassword')}
-                      id="confirmPassword"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.confirmPassword}

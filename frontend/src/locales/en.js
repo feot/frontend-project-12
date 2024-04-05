@@ -7,7 +7,7 @@ const en = {
     modal: {
       add: {
         title: 'New channel',
-        inputPlaceholder: 'Insert name',
+        inputLabel: 'Channel name',
         submit: 'Create',
       },
       delete: {
@@ -17,7 +17,7 @@ const en = {
       },
       rename: {
         title: 'Rename channel',
-        inputPlaceholder: 'Insert name',
+        inputLabel: 'Channel name',
         submit: 'Rename',
       },
       cancel: 'Cancel',
@@ -31,7 +31,8 @@ const en = {
       fallbackChannelTitle: 'Select channel',
     },
     msgForm: {
-      inputPlaceholder: 'Insert message...',
+      inputLabel: 'New message',
+      inputPlaceholder: 'Input message...',
       submit: 'Send',
     },
     login: {

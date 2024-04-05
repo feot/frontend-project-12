@@ -7,7 +7,7 @@ const ru = {
     modal: {
       add: {
         title: 'Добавить канал',
-        inputPlaceholder: 'Введите название',
+        inputLabel: 'Имя канала',
         submit: 'Отправить',
       },
       delete: {
@@ -17,7 +17,7 @@ const ru = {
       },
       rename: {
         title: 'Переименовать канал',
-        inputPlaceholder: 'Введите название',
+        inputLabel: 'Имя канала',
         submit: 'Отправить',
       },
       cancel: 'Отменить',
@@ -31,6 +31,7 @@ const ru = {
       fallbackChannelTitle: 'Выберите канал',
     },
     msgForm: {
+      inputLabel: 'Новое сообщение',
       inputPlaceholder: 'Введите сообщение...',
       submit: 'Отправить',
     },

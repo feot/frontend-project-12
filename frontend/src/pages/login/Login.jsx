@@ -83,6 +83,7 @@ const Login = () => {
                 <Form.Group className="mb-3" controlId="username">
                   <FloatingLabel
                     label={t('login.username')}
+                    controlId="username"
                     className="mb-3"
                   >
                     <Form.Control
@@ -90,7 +91,6 @@ const Login = () => {
                       autoComplete="username"
                       required
                       placeholder={t('login.username')}
-                      id="username"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.username}
@@ -103,6 +103,7 @@ const Login = () => {
                 <Form.Group className="mb-3" controlId="password">
                   <FloatingLabel
                     label={t('login.password')}
+                    controlId="password"
                     className="mb-3"
                   >
                     <Form.Control
@@ -110,7 +111,6 @@ const Login = () => {
                       autoComplete="password"
                       required
                       placeholder={t('login.password')}
-                      id="password"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.password}
