@@ -35,9 +35,11 @@ const slice = createSlice({
     ];
 
     builder
-      .addCase(removeChannel, (state) => {
-        state.activeChannel = state.defaultChannel;
+      .addCase(removeChannel, (state, { payload: channelId }) => {
         state.isModalShown = false;
+        if (state.activeChannel.id === channelId) {
+          state.activeChannel = state.defaultChannel;
+        }
       })
       .addCase(renameChannel, (state, { payload: channel }) => {
         state.activeChannel = channel;
