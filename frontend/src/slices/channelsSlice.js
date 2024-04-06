@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
+
 import { createSlice } from '@reduxjs/toolkit';
-import { api } from '../services/api.js';
+import api from '../services/api.js';
 
 const initialState = {
   entities: {},
@@ -11,7 +13,7 @@ const slice = createSlice({
   initialState,
   reducers: {
     addChannels: (state, { payload: channels }) => {
-      channels.forEach(channel => {
+      channels.forEach((channel) => {
         state.entities[channel.id] = channel;
       });
       state.ids.push(...channels.map(({ id }) => id));

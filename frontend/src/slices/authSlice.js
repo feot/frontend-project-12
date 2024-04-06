@@ -1,7 +1,9 @@
+/* eslint-disable no-param-reassign */
+
 import { createSlice } from '@reduxjs/toolkit';
-import { api } from '../services/api.js';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
+import api from '../services/api.js';
 
 const initialState = {
   user: null,

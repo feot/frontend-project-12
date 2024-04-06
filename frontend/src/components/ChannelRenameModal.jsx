@@ -15,17 +15,15 @@ import { selectChannels } from '../slices/channelsSlice.js';
 import { selectIsModalShown, setIsModalShown } from '../slices/uiSlice.js';
 import { useRenameChannelMutation } from '../services/channels.js';
 
-const getValidationSchema = (existingChannelNames) => {
-  return yup.object().shape({
-    newChannelName: yup.string()
-      .trim()
-      .min(3, 'minmax')
-      .max(20, 'minmax')
-      .required('required')
-      .transform((value) => profanityFilter.clean(value))
-      .notOneOf(existingChannelNames, 'channelRepeat'),
-  });
-}
+const getValidationSchema = (existingChannelNames) => yup.object().shape({
+  newChannelName: yup.string()
+    .trim()
+    .min(3, 'minmax')
+    .max(20, 'minmax')
+    .required('required')
+    .transform((value) => profanityFilter.clean(value))
+    .notOneOf(existingChannelNames, 'channelRepeat'),
+});
 
 const InvalidFeedback = ({ validationError, networkError, t }) => {
   if (!validationError && !networkError) {
@@ -50,12 +48,15 @@ const ChannelRenameModal = ({ id, prevName }) => {
     {
       error: renameChannelError,
       isLoading: isRenamingChannel,
-    }
+    },
   ] = useRenameChannelMutation();
 
-  const handleRenameChannel = (id, name) => {
+  const handleRenameChannel = (channelId, name) => {
     const nameProfanityFiltered = profanityFilter.clean(name);
-    renameChannel({ id, name: nameProfanityFiltered });
+    renameChannel({
+      id: channelId,
+      name: nameProfanityFiltered,
+    });
   };
 
   const handleClose = () => dispatch(setIsModalShown(false));

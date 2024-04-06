@@ -1,4 +1,4 @@
-import { api } from './api.js';
+import api from './api.js';
 
 export const channelsApi = api.injectEndpoints({
   endpoints: (build) => ({

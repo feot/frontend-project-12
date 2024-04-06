@@ -31,7 +31,7 @@ const ChatForm = () => {
   const { t } = useTranslation();
   const [
     sendMessage,
-    { error: sendMessageError, isLoading: isSendingMessage }
+    { error: sendMessageError, isLoading: isSendingMessage },
   ] = useSendMessageMutation();
 
   const handleSendMessage = (text) => {

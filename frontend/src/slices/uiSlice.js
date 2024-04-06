@@ -1,8 +1,10 @@
+/* eslint-disable no-param-reassign */
+
 import { createSlice, isAnyOf } from '@reduxjs/toolkit';
-import { api } from '../services/api.js';
-import { removeChannel, renameChannel } from './channelsSlice.js';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
+import api from '../services/api.js';
+import { removeChannel, renameChannel } from './channelsSlice.js';
 
 const initialState = {
   activeChannel: null,
@@ -59,7 +61,7 @@ const slice = createSlice({
       .addMatcher(api.endpoints.renameChannel.matchFulfilled, () => {
         toast.success(t('toastify.channelRenamed'));
       })
-      .addMatcher(isAnyOf (...matchRejectedCases), () => {
+      .addMatcher(isAnyOf(...matchRejectedCases), () => {
         toast.error(t('toastify.network'));
       });
   },

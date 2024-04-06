@@ -5,12 +5,13 @@ import React, {
 import { Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
-import * as yup from 'yup'
-import { useSignupMutation } from '../../services/auth.js';
+import * as yup from 'yup';
 
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
+
+import { useSignupMutation } from '../../services/auth.js';
 
 const schema = yup.object().shape({
   username: yup.string().trim()
@@ -47,7 +48,7 @@ const Signup = () => {
       isError: signupFailed,
       error: signupError,
       isLoading: isSigningUp,
-      isSuccess: signedUp
+      isSuccess: signedUp,
     },
   ] = useSignupMutation();
   const signupHandler = (credentials) => signup(credentials);
@@ -60,7 +61,7 @@ const Signup = () => {
 
   if (signedUp) {
     const from = location?.state?.from || '/';
-    return <Navigate to={from}/>;
+    return <Navigate to={from} />;
   }
 
   return (
@@ -70,8 +71,8 @@ const Signup = () => {
           <Formik
             initialValues={{
               username: '',
-              password: '', 
-              confirmPassword: '', 
+              password: '',
+              confirmPassword: '',
             }}
             validationSchema={schema}
             onSubmit={(values) => {
@@ -163,6 +164,6 @@ const Signup = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Signup;

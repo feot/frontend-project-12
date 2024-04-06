@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
+
 import { createSlice } from '@reduxjs/toolkit';
-import { api } from '../services/api.js';
+import api from '../services/api.js';
 import { removeChannel } from './channelsSlice.js';
 
 const initialState = {
@@ -24,14 +26,13 @@ const slice = createSlice({
           if (message.channelId === channelId) {
             delete state.entities[message.id];
             return acc;
-          } else {
-            return [...acc, message.id];
           }
+          return [...acc, message.id];
         }, []);
         state.ids = rest;
       })
       .addMatcher(api.endpoints.getMessages.matchFulfilled, (state, { payload: messages }) => {
-        messages.forEach(message => {
+        messages.forEach((message) => {
           state.entities[message.id] = message;
         });
         state.ids.push(...messages.map(({ id }) => id));

@@ -1,22 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import { Provider } from 'react-redux';
-import { store } from './store.js';
-import reportWebVitals from './reportWebVitals';
 import {
   Provider as RollBarProvider,
-  ErrorBoundary
+  ErrorBoundary,
 } from '@rollbar/react';
+import App from './App';
+import store from './store.js';
+import reportWebVitals from './reportWebVitals';
 
 import './i18next.js';
 
 import './index.css';
 
 const {
-  REACT_APP_RUNTIME_ENV : nodeEnv,
+  REACT_APP_RUNTIME_ENV: nodeEnv,
   REACT_APP_ROLLBAR_CLIENT_TOKEN: rollbarAccessToken,
-} =  process.env;
+} = process.env;
 const environment = (nodeEnv === 'production') ? 'production' : 'dev';
 
 const rollbarConfig = {
@@ -34,7 +34,7 @@ root.render(
         <App />
       </ErrorBoundary>
     </RollBarProvider>
-  </Provider>
+  </Provider>,
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -73,7 +73,7 @@ const App = () => {
                   </PrivateRoute>
                 )}
               />
-              <Route path='*' element={<NotFoundPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
         </div>
@@ -82,6 +82,6 @@ const App = () => {
       </BrowserRouter>
     </ModalContext.Provider>
   );
-}
+};
 
 export default App;

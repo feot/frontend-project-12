@@ -48,7 +48,7 @@ const ChannelAddModal = () => {
     {
       error: addingChannelError,
       isLoading: isAddingChannel,
-    }
+    },
   ] = useAddChannelMutation();
 
   const handleAddChannel = (name) => {

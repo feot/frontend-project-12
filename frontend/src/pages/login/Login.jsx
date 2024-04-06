@@ -2,7 +2,6 @@ import React, {
   useRef,
   useEffect,
 } from 'react';
-import { useLoginMutation } from '../../services/auth.js';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -11,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
+
+import { useLoginMutation } from '../../services/auth.js';
 
 const schema = yup.object().shape({
   username: yup.string().trim().required('required'),
@@ -53,11 +54,11 @@ const Login = () => {
 
   if (isSuccess) {
     const from = location?.state?.from || '/';
-    return <Navigate to={from}/>;
+    return <Navigate to={from} />;
   }
 
   const handleSignupNav = () => {
-    navigate('/signup')
+    navigate('/signup');
   };
 
   return (
@@ -141,6 +142,6 @@ const Login = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

@@ -28,7 +28,13 @@ const Messages = () => {
       {
         messages.map((message) => {
           const { id, username, body } = message;
-          return <div key={id}><b>{username}</b>: {body}</div>
+          return (
+            <div key={id}>
+              <b>{username}</b>
+              :
+              {body}
+            </div>
+          );
         })
       }
     </div>
