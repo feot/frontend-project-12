@@ -63,8 +63,10 @@ const slice = createSlice({
       .addMatcher(api.endpoints.renameChannel.matchFulfilled, () => {
         toast.success(t('toastify.channelRenamed'));
       })
-      .addMatcher(isAnyOf(...matchRejectedCases), () => {
-        toast.error(t('toastify.network'));
+      .addMatcher(isAnyOf(...matchRejectedCases), (_, { payload }) => {
+        if (payload.status !== 401) {
+          toast.error(t('toastify.network'));
+        }
       });
   },
 });

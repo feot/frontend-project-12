@@ -1,12 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
 import { useGetMessagesQuery } from '../services/messages.js';
 import { selectActiveChannel } from '../slices/uiSlice.js';
 import { selectMessages } from '../slices/messagesSlice.js';
 
 const Messages = () => {
-  const { isError } = useGetMessagesQuery();
+  const { isError, error } = useGetMessagesQuery();
   const activeChannel = useSelector(selectActiveChannel);
   const messageEntities = useSelector(selectMessages);
   const messages = Object.values(messageEntities)
@@ -19,6 +20,9 @@ const Messages = () => {
     }
   }, [messages]);
 
+  if (error?.status === 401) {
+    return <Navigate to="/login" />;
+  }
   if (isError || !messages.length) {
     return null;
   }

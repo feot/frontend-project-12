@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { t } from 'i18next';
 import api from '../services/api.js';
@@ -10,7 +10,9 @@ const initialState = {
   token: null,
   isAuthenticated: false,
 };
-const localStorageAuthData = JSON.parse(localStorage.getItem('auth'));
+const localStorageAuthData = (localStorage.getItem('auth'))
+  ? JSON.parse(localStorage.getItem('auth'))
+  : {};
 
 const slice = createSlice({
   name: 'auth',
@@ -25,6 +27,11 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    const dataRequestRejects = [
+      api.endpoints.getChannels.matchRejected,
+      api.endpoints.getMessages.matchRejected,
+    ];
+
     builder
       .addMatcher(api.endpoints.login.matchFulfilled, (state, action) => {
         const { username: user, token } = action.payload;
@@ -41,6 +48,11 @@ const slice = createSlice({
         state.token = token;
         state.isAuthenticated = isAuthenticated;
         localStorage.setItem('auth', JSON.stringify({ user, token, isAuthenticated }));
+      })
+      .addMatcher(isAnyOf(...dataRequestRejects), (_, { payload }) => {
+        if (payload.status === 401) {
+          slice.caseReducers.logout();
+        }
       })
       .addMatcher(api.endpoints.login.matchRejected, (_, action) => {
         const { status } = action.payload;

@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext,  } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import { Dropdown, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
@@ -19,11 +20,14 @@ import {
 const Channels = () => {
   const dispatch = useDispatch();
   const setModal = useContext(ModalContext);
-  const { isError } = useGetChannelsQuery();
+  const { isError, error } = useGetChannelsQuery();
   const activeChannel = useSelector(selectActiveChannel);
   const channelEntities = useSelector(selectChannels);
   const { t } = useTranslation();
 
+  if (error?.status === 401) {
+    return <Navigate to="/login" />;
+  }
   if (isError || !Object.keys(channelEntities).length) {
     return null;
   }
