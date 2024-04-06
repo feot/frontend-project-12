@@ -1,3 +1,4 @@
+import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import profanityFilter from 'leo-profanity';
@@ -28,11 +29,16 @@ const InvalidFeedback = ({ validationError, networkError, t }) => {
 const ChatForm = () => {
   const activeChannel = useSelector(selectActiveChannel);
   const username = useSelector(selectUsername);
+  const textInputRef = useRef();
   const { t } = useTranslation();
   const [
     sendMessage,
     { error: sendMessageError, isLoading: isSendingMessage },
   ] = useSendMessageMutation();
+
+  useEffect(() => {
+    textInputRef.current.focus();
+  }, [activeChannel]);
 
   const handleSendMessage = (text) => {
     const channelId = activeChannel?.id;
@@ -72,9 +78,9 @@ const ChatForm = () => {
             placeholder={t('msgForm.inputPlaceholder')}
             id="text"
             className="w-auto flex-grow-1"
+            ref={textInputRef}
             value={values.text}
             onChange={handleChange}
-            autoFocus
             isInvalid={!isSendingMessage && (errors.text || sendMessageError)}
           />
           <Button variant="outline-primary" type="submit" disabled={isSendingMessage}>
