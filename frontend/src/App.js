@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,16 +16,25 @@ import {
   Navbar,
   Button,
 } from 'react-bootstrap';
+import { io } from 'socket.io-client';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import ModalContext from './ModalContext.js';
 import { selectIsAuthenticated, logout } from './slices/authSlice.js';
+import {
+  addChannel,
+  removeChannel,
+  renameChannel,
+} from './slices/channelsSlice.js';
+import { addMessage } from './slices/messagesSlice.js';
 
+import ModalContext from './ModalContext.js';
 import MainPage from './pages/main/Main.jsx';
 import LoginPage from './pages/login/Login.jsx';
 import Signup from './pages/signup/Signup.jsx';
 import NotFoundPage from './pages/NotFound.jsx';
+
+import './i18next.js';
 
 const PrivateRoute = ({ isAuthenticated, children }) => {
   const location = useLocation();
@@ -41,6 +50,26 @@ const App = () => {
   const { t } = useTranslation();
 
   const [Modal, setModal] = useState(null);
+
+  useEffect(() => {
+    const socket = io();
+
+    socket.on('newChannel', (channel) => {
+      dispatch(addChannel(channel));
+    });
+
+    socket.on('removeChannel', ({ id }) => {
+      dispatch(removeChannel(id));
+    });
+
+    socket.on('newMessage', (message) => {
+      dispatch(addMessage(message));
+    });
+
+    socket.on('renameChannel', (channel) => {
+      dispatch(renameChannel(channel));
+    });
+  }, [dispatch]);
 
   return (
     <ModalContext.Provider value={setModal}>

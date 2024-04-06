@@ -8,8 +8,6 @@ import {
 import App from './App';
 import store from './store.js';
 
-import './i18next.js';
-
 import './index.css';
 
 const {
