@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { Dropdown, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
+import Spinner from './Spinner.jsx';
 import ModalContext from '../ModalContext.js';
 import ChannelAddModal from './ChannelAddModal.jsx';
 import ChannelDeleteModal from './ChannelDeleteModal.jsx';
@@ -20,7 +21,7 @@ import {
 const Channels = () => {
   const dispatch = useDispatch();
   const setModal = useContext(ModalContext);
-  const { isError, error } = useGetChannelsQuery();
+  const { isError, error, isLoading } = useGetChannelsQuery();
   const activeChannel = useSelector(selectActiveChannel);
   const channelEntities = useSelector(selectChannels);
   const { t } = useTranslation();
@@ -106,6 +107,7 @@ const Channels = () => {
       </div>
       <div className="overflow-auto h-100">
         <ul className="nav nav-pills nav-fill h-100 d-block">
+          {isLoading && <Spinner />}
           {channelEls}
         </ul>
       </div>
