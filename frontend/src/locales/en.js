@@ -65,6 +65,8 @@ const en = {
       channelRenamed: 'Channel renamed',
       network: 'Check your connection',
     },
+    spinnerLabel: 'Loading Spinner',
+    pageNotFound: 'Page not found',
   },
 };
 export default en;

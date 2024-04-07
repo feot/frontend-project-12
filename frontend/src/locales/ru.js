@@ -65,6 +65,8 @@ const ru = {
       channelRenamed: 'Канал переименован',
       network: 'Проверьте соединение',
     },
+    spinnerLabel: 'Визуализатор загрузки',
+    pageNotFound: 'Страница не найдена',
   },
 };
 export default ru;
