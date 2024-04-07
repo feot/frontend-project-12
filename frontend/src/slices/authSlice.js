@@ -2,7 +2,7 @@
 
 import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { t } from 'i18next';
+import i18nInstance from '../i18next.js';
 import api from '../services/api.js';
 
 const initialState = {
@@ -57,13 +57,13 @@ const slice = createSlice({
       .addMatcher(api.endpoints.login.matchRejected, (_, action) => {
         const { status } = action.payload;
         if (status !== 401) {
-          toast.error(t('toastify.network'));
+          toast.error(i18nInstance.t('toastify.network'));
         }
       })
       .addMatcher(api.endpoints.signup.matchRejected, (_, action) => {
         const { status } = action.payload;
         if (status !== 409) {
-          toast.error(t('toastify.network'));
+          toast.error(i18nInstance.t('toastify.network'));
         }
       });
   },

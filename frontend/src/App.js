@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import {
   BrowserRouter,
   Routes,
@@ -17,8 +16,12 @@ import {
   Button,
 } from 'react-bootstrap';
 import { io } from 'socket.io-client';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import profanityFilter from 'leo-profanity';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import i18nInstance from './i18next.js';
 
 import { selectIsAuthenticated, logout } from './slices/authSlice.js';
 import {
@@ -34,7 +37,13 @@ import LoginPage from './pages/login/Login.jsx';
 import Signup from './pages/signup/Signup.jsx';
 import NotFoundPage from './pages/NotFound.jsx';
 
-import './i18next.js';
+const profanityFilterInit = () => {
+  profanityFilter.list();
+  profanityFilter.clearList();
+  profanityFilter.add(profanityFilter.getDictionary('en'));
+  profanityFilter.add(profanityFilter.getDictionary('ru'));
+  profanityFilter.list();
+};
 
 const PrivateRoute = ({ isAuthenticated, children }) => {
   const location = useLocation();
@@ -69,44 +78,48 @@ const App = () => {
     socket.on('renameChannel', (channel) => {
       dispatch(renameChannel(channel));
     });
+
+    profanityFilterInit();
   }, [dispatch]);
 
   return (
     <ModalContext.Provider value={setModal}>
       <BrowserRouter>
-        <div className="d-flex flex-column h-100">
-          <header className="shadow-sm">
-            <Navbar bg="white" expand="lg">
-              <Container>
-                <Navbar.Brand as={Link} to="/">{t('header.logo')}</Navbar.Brand>
-                {isAuthenticated && <Button onClick={() => dispatch(logout())}>{t('header.logout')}</Button>}
-              </Container>
-            </Navbar>
-          </header>
+        <I18nextProvider i18n={i18nInstance}>
+          <div className="d-flex flex-column h-100">
+            <header className="shadow-sm">
+              <Navbar bg="white" expand="lg">
+                <Container>
+                  <Navbar.Brand as={Link} to="/">{t('header.logo')}</Navbar.Brand>
+                  {isAuthenticated && <Button onClick={() => dispatch(logout())}>{t('header.logout')}</Button>}
+                </Container>
+              </Navbar>
+            </header>
 
-          <main className="d-flex align-items-center h-100 py-3 overflow-hidden">
-            <Routes>
-              <Route
-                path="/login"
-                element={<LoginPage />}
-              />
-              <Route
-                path="/signup"
-                element={<Signup />}
-              />
-              <Route
-                path="/"
-                element={(
-                  <PrivateRoute isAuthenticated={isAuthenticated}>
-                    <MainPage />
-                  </PrivateRoute>
-                )}
-              />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </main>
-        </div>
-        {Modal}
+            <main className="d-flex align-items-center h-100 py-3 overflow-hidden">
+              <Routes>
+                <Route
+                  path="/login"
+                  element={<LoginPage />}
+                />
+                <Route
+                  path="/signup"
+                  element={<Signup />}
+                />
+                <Route
+                  path="/"
+                  element={(
+                    <PrivateRoute isAuthenticated={isAuthenticated}>
+                      <MainPage />
+                    </PrivateRoute>
+                  )}
+                />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </main>
+          </div>
+          {Modal}
+        </I18nextProvider>
         <ToastContainer />
       </BrowserRouter>
     </ModalContext.Provider>

@@ -2,7 +2,7 @@
 
 import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { t } from 'i18next';
+import i18nInstance from '../i18next.js';
 import api from '../services/api.js';
 import { removeChannel, renameChannel } from './channelsSlice.js';
 
@@ -55,17 +55,17 @@ const slice = createSlice({
       .addMatcher(api.endpoints.addChannel.matchFulfilled, (state, { payload }) => {
         state.activeChannel = payload;
         state.isModalShown = false;
-        toast.success(t('toastify.channelAdded'));
+        toast.success(i18nInstance.t('toastify.channelAdded'));
       })
       .addMatcher(api.endpoints.removeChannel.matchFulfilled, () => {
-        toast.success(t('toastify.channelDeleted'));
+        toast.success(i18nInstance.t('toastify.channelDeleted'));
       })
       .addMatcher(api.endpoints.renameChannel.matchFulfilled, () => {
-        toast.success(t('toastify.channelRenamed'));
+        toast.success(i18nInstance.t('toastify.channelRenamed'));
       })
       .addMatcher(isAnyOf(...matchRejectedCases), (_, { payload }) => {
         if (payload.status !== 401) {
-          toast.error(t('toastify.network'));
+          toast.error(i18nInstance.t('toastify.network'));
         }
       });
   },
