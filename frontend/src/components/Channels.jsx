@@ -1,25 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import { Dropdown, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-
-import ModalContext from '../ModalContext.js';
-import ChannelAddModal from './ChannelAddModal.jsx';
-import ChannelDeleteModal from './ChannelDeleteModal.jsx';
-import ChannelRenameModal from './ChannelRenameModal.jsx';
 
 import { useGetChannelsQuery } from '../services/channels.js';
 import { selectChannels } from '../slices/channelsSlice.js';
 import {
   selectChannel,
   setIsModalShown,
+  setModalType,
+  setModalProps,
   selectActiveChannel,
 } from '../slices/uiSlice.js';
 
 const Channels = () => {
   const dispatch = useDispatch();
-  const setModal = useContext(ModalContext);
   const { isError, error } = useGetChannelsQuery();
   const activeChannel = useSelector(selectActiveChannel);
   const channelEntities = useSelector(selectChannels);
@@ -33,7 +29,7 @@ const Channels = () => {
   }
 
   const handleChannelAdd = () => {
-    setModal(<ChannelAddModal />);
+    dispatch(setModalType('add'));
     dispatch(setIsModalShown(true));
   };
 
@@ -42,12 +38,17 @@ const Channels = () => {
   };
 
   const handleChannelDelete = (id) => {
-    setModal(<ChannelDeleteModal id={id} />);
+    dispatch(setModalType('delete'));
+    dispatch(setModalProps({ channelId: id }));
     dispatch(setIsModalShown(true));
   };
 
   const handleChannelRename = (id, name) => {
-    setModal(<ChannelRenameModal id={id} prevName={name} />);
+    dispatch(setModalType('rename'));
+    dispatch(setModalProps({
+      channelId: id,
+      prevChannelName: name,
+    }));
     dispatch(setIsModalShown(true));
   };
 

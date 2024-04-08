@@ -10,6 +10,11 @@ const initialState = {
   activeChannel: null,
   defaultChannel: null,
   isModalShown: false,
+  modalType: null,
+  modalProps: {
+    channelId: null,
+    prevChannelName: '',
+  },
   appLoadingState: 'loading',
 };
 
@@ -22,6 +27,15 @@ const slice = createSlice({
     },
     setIsModalShown: (state, { payload }) => {
       state.isModalShown = payload;
+    },
+    setModalType: (state, { payload }) => {
+      state.modalType = payload;
+    },
+    setModalProps: (state, { payload }) => {
+      state.modalProps = {
+        ...current(state.modalProps),
+        ...payload,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -88,8 +102,15 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-export const { selectChannel, setIsModalShown } = slice.actions;
+export const {
+  selectChannel,
+  setIsModalShown,
+  setModalType,
+  setModalProps,
+} = slice.actions;
 
 export const selectAppLoadingState = (state) => state.ui.appLoadingState;
 export const selectActiveChannel = (state) => state.ui.activeChannel;
 export const selectIsModalShown = (state) => state.ui.isModalShown;
+export const selectModalType = (state) => state.ui.modalType;
+export const selectModalProps = (state) => state.ui.modalProps;

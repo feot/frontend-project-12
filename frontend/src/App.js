@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   BrowserRouter,
@@ -31,7 +31,7 @@ import {
 } from './slices/channelsSlice.js';
 import { addMessage } from './slices/messagesSlice.js';
 
-import ModalContext from './ModalContext.js';
+import Modal from './components/modals/index.jsx';
 import MainPage from './pages/main/Main.jsx';
 import LoginPage from './pages/login/Login.jsx';
 import Signup from './pages/signup/Signup.jsx';
@@ -58,8 +58,6 @@ const App = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const { t } = useTranslation();
 
-  const [Modal, setModal] = useState(null);
-
   useEffect(() => {
     const socket = io();
 
@@ -83,46 +81,44 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <ModalContext.Provider value={setModal}>
-      <BrowserRouter>
-        <I18nextProvider i18n={i18nInstance}>
-          <div className="d-flex flex-column h-100">
-            <header className="shadow-sm">
-              <Navbar bg="white" expand="lg">
-                <Container>
-                  <Navbar.Brand as={Link} to="/">{t('header.logo')}</Navbar.Brand>
-                  {isAuthenticated && <Button onClick={() => dispatch(logout())}>{t('header.logout')}</Button>}
-                </Container>
-              </Navbar>
-            </header>
+    <BrowserRouter>
+      <I18nextProvider i18n={i18nInstance}>
+        <div className="d-flex flex-column h-100">
+          <header className="shadow-sm">
+            <Navbar bg="white" expand="lg">
+              <Container>
+                <Navbar.Brand as={Link} to="/">{t('header.logo')}</Navbar.Brand>
+                {isAuthenticated && <Button onClick={() => dispatch(logout())}>{t('header.logout')}</Button>}
+              </Container>
+            </Navbar>
+          </header>
 
-            <main className="d-flex align-items-center h-100 py-3 overflow-hidden">
-              <Routes>
-                <Route
-                  path="/login"
-                  element={<LoginPage />}
-                />
-                <Route
-                  path="/signup"
-                  element={<Signup />}
-                />
-                <Route
-                  path="/"
-                  element={(
-                    <PrivateRoute isAuthenticated={isAuthenticated}>
-                      <MainPage />
-                    </PrivateRoute>
-                  )}
-                />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </main>
-          </div>
-          {Modal}
-        </I18nextProvider>
-        <ToastContainer />
-      </BrowserRouter>
-    </ModalContext.Provider>
+          <main className="d-flex align-items-center h-100 py-3 overflow-hidden">
+            <Routes>
+              <Route
+                path="/login"
+                element={<LoginPage />}
+              />
+              <Route
+                path="/signup"
+                element={<Signup />}
+              />
+              <Route
+                path="/"
+                element={(
+                  <PrivateRoute isAuthenticated={isAuthenticated}>
+                    <MainPage />
+                  </PrivateRoute>
+                )}
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </main>
+        </div>
+        <Modal />
+      </I18nextProvider>
+      <ToastContainer />
+    </BrowserRouter>
   );
 };
 

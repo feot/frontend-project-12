@@ -11,9 +11,9 @@ import profanityFilter from 'leo-profanity';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import { selectChannels } from '../slices/channelsSlice.js';
-import { selectIsModalShown, setIsModalShown } from '../slices/uiSlice.js';
-import { useAddChannelMutation } from '../services/channels.js';
+import { selectChannels } from '../../slices/channelsSlice.js';
+import { selectIsModalShown, setIsModalShown } from '../../slices/uiSlice.js';
+import { useAddChannelMutation } from '../../services/channels.js';
 
 const getValidationSchema = (existingChannelNames) => yup.object().shape({
   channelName: yup.string()

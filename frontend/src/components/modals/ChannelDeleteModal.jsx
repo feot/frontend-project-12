@@ -2,8 +2,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
-import { selectIsModalShown, setIsModalShown } from '../slices/uiSlice.js';
-import { useRemoveChannelMutation } from '../services/channels.js';
+import {
+  selectIsModalShown,
+  selectModalProps,
+  setIsModalShown,
+} from '../../slices/uiSlice.js';
+import { useRemoveChannelMutation } from '../../services/channels.js';
 
 const InvalidFeedback = ({ networkError, t }) => {
   if (!networkError) {
@@ -14,8 +18,10 @@ const InvalidFeedback = ({ networkError, t }) => {
   return <div className="w-100 invalid-feedback text-center">{errorMsg}</div>;
 };
 
-const ChannelDeleteModal = ({ id }) => {
+const ChannelDeleteModal = () => {
   const isModalShown = useSelector(selectIsModalShown);
+  const { channelId } = useSelector(selectModalProps);
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const [
@@ -27,7 +33,7 @@ const ChannelDeleteModal = ({ id }) => {
   ] = useRemoveChannelMutation();
 
   const handleRemoveChannel = () => {
-    removeChannel(id);
+    removeChannel(channelId);
   };
 
   const handleClose = () => dispatch(setIsModalShown(false));

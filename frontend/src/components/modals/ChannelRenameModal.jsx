@@ -11,9 +11,13 @@ import profanityFilter from 'leo-profanity';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import { selectChannels } from '../slices/channelsSlice.js';
-import { selectIsModalShown, setIsModalShown } from '../slices/uiSlice.js';
-import { useRenameChannelMutation } from '../services/channels.js';
+import { selectChannels } from '../../slices/channelsSlice.js';
+import {
+  selectIsModalShown,
+  selectModalProps,
+  setIsModalShown,
+} from '../../slices/uiSlice.js';
+import { useRenameChannelMutation } from '../../services/channels.js';
 
 const getValidationSchema = (existingChannelNames) => yup.object().shape({
   newChannelName: yup.string()
@@ -36,8 +40,9 @@ const InvalidFeedback = ({ validationError, networkError, t }) => {
   return <div className="invalid-feedback text-center w-100 mb-2">{errorMsg}</div>;
 };
 
-const ChannelRenameModal = ({ id, prevName }) => {
+const ChannelRenameModal = () => {
   const channelEntities = useSelector(selectChannels);
+  const { channelId, prevChannelName } = useSelector(selectModalProps);
   const isModalShown = useSelector(selectIsModalShown);
   const dispatch = useDispatch();
   const textInputRef = useRef();
@@ -51,7 +56,7 @@ const ChannelRenameModal = ({ id, prevName }) => {
     },
   ] = useRenameChannelMutation();
 
-  const handleRenameChannel = (channelId, name) => {
+  const handleRenameChannel = (name) => {
     const nameProfanityFiltered = profanityFilter.clean(name);
     renameChannel({
       id: channelId,
@@ -73,11 +78,11 @@ const ChannelRenameModal = ({ id, prevName }) => {
       </Modal.Header>
       <Modal.Body>
         <Formik
-          initialValues={{ newChannelName: prevName }}
+          initialValues={{ newChannelName: prevChannelName }}
           validationSchema={getValidationSchema(existingChannelNames)}
           validateOnChange={false}
           onSubmit={({ newChannelName }) => {
-            handleRenameChannel(id, newChannelName);
+            handleRenameChannel(newChannelName);
           }}
         >
           {({
