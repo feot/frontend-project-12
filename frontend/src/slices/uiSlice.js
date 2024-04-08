@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-import { createSlice, isAnyOf } from '@reduxjs/toolkit';
+import { createSlice, current, isAnyOf } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import i18nInstance from '../i18next.js';
 import api from '../services/api.js';
@@ -10,6 +10,7 @@ const initialState = {
   activeChannel: null,
   defaultChannel: null,
   isModalShown: false,
+  appLoadingState: 'loading',
 };
 
 const slice = createSlice({
@@ -46,10 +47,25 @@ const slice = createSlice({
         state.isModalShown = false;
       })
       .addMatcher(api.endpoints.getChannels.matchFulfilled, (state, { payload }) => {
+        const { appLoadingState } = current(state);
+
         if (Object.keys(payload).length !== 0) {
           const defaultChannel = Object.values(payload)[0];
           state.defaultChannel = defaultChannel;
           state.activeChannel = defaultChannel;
+        }
+        if (appLoadingState === 'messagesLoaded') {
+          state.appLoadingState = 'loaded';
+        } else {
+          state.appLoadingState = 'channelsLoaded';
+        }
+      })
+      .addMatcher(api.endpoints.getMessages.matchFulfilled, (state) => {
+        const { appLoadingState } = current(state);
+        if (appLoadingState === 'channelsLoaded') {
+          state.appLoadingState = 'loaded';
+        } else {
+          state.appLoadingState = 'messagesLoaded';
         }
       })
       .addMatcher(api.endpoints.addChannel.matchFulfilled, (state, { payload }) => {
@@ -74,5 +90,6 @@ const slice = createSlice({
 export default slice.reducer;
 export const { selectChannel, setIsModalShown } = slice.actions;
 
+export const selectAppLoadingState = (state) => state.ui.appLoadingState;
 export const selectActiveChannel = (state) => state.ui.activeChannel;
 export const selectIsModalShown = (state) => state.ui.isModalShown;

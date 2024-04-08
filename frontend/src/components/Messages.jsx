@@ -2,13 +2,12 @@ import React, { useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-import Spinner from './Spinner.jsx';
 import { useGetMessagesQuery } from '../services/messages.js';
 import { selectActiveChannel } from '../slices/uiSlice.js';
 import { selectMessages } from '../slices/messagesSlice.js';
 
 const Messages = () => {
-  const { isError, error, isLoading } = useGetMessagesQuery();
+  const { isError, error } = useGetMessagesQuery();
   const activeChannel = useSelector(selectActiveChannel);
   const messageEntities = useSelector(selectMessages);
   const messages = Object.values(messageEntities)
@@ -30,7 +29,6 @@ const Messages = () => {
 
   return (
     <div ref={messagesContainerRef} className="h-100 overflow-auto text-break">
-      {isLoading && <Spinner />}
       {
         messages.map((message) => {
           const { id, username, body } = message;
