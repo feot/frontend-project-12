@@ -1,6 +1,6 @@
 # Chat
 
-[Project Deploy](https://chat-kv1d.onrender.com)
+[Project Deploy](https://chat-kv1d.onrender.com) (first load takes some time due to render.com's load optimization)
 
 ### Tests and linter status:
 [![Actions Status](https://github.com/feot/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/feot/frontend-project-12/actions)
